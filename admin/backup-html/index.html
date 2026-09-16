@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>数据看板 - 校园跑腿管理后台</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="layout">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="main">
+      <div class="header" id="header"></div>
+      <div class="content">
+        <!-- 统计卡片 -->
+        <div class="stats-row">
+          <div class="stat-card blue">
+            <div class="stat-label">今日订单</div>
+            <div class="stat-value">128</div>
+            <div class="stat-change up">↑ 12.5% 较昨日</div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-label">今日交易额</div>
+            <div class="stat-value">¥586.00</div>
+            <div class="stat-change up">↑ 8.3% 较昨日</div>
+          </div>
+          <div class="stat-card orange">
+            <div class="stat-label">新增用户</div>
+            <div class="stat-value">12</div>
+            <div class="stat-change up">↑ 20% 较昨日</div>
+          </div>
+          <div class="stat-card purple">
+            <div class="stat-label">活跃跑腿员</div>
+            <div class="stat-value">23</div>
+            <div class="stat-change down">↓ 2 较昨日</div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="col">
+            <div class="card">
+              <div class="card-title">近7日订单趋势</div>
+              <div class="chart-placeholder">📈 订单趋势图表（待接入 ECharts）</div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card">
+              <div class="card-title">服务类型占比</div>
+              <div class="chart-placeholder">🥧 服务类型饼图（待接入 ECharts）</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="col">
+            <div class="card">
+              <div class="card-title">待处理事项</div>
+              <table class="data-table">
+                <thead>
+                  <tr><th>类型</th><th>数量</th><th>操作</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td><span class="tag orange">实名认证审核</span></td><td>5</td><td><button class="btn-link">去处理</button></td></tr>
+                  <tr><td><span class="tag red">投诉工单</span></td><td>2</td><td><button class="btn-link">去处理</button></td></tr>
+                  <tr><td><span class="tag green">提现审核</span></td><td>8</td><td><button class="btn-link">去处理</button></td></tr>
+                  <tr><td><span class="tag blue">跑腿员入驻</span></td><td>3</td><td><button class="btn-link">去处理</button></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card">
+              <div class="card-title">最新订单</div>
+              <table class="data-table">
+                <thead>
+                  <tr><th>订单号</th><th>类型</th><th>金额</th><th>状态</th></tr>
+                </thead>
+                <tbody id="latestOrders"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="js/app.js"></script>
+  <script>
+    initPage('dashboard', '数据看板');
+    // 渲染最新订单
+    const tbody = document.getElementById('latestOrders');
+    mockData.orders.slice(0, 5).forEach(o => {
+      tbody.innerHTML += `<tr>
+        <td>${o.id}</td>
+        <td>${o.type}</td>
+        <td>¥${o.amount}</td>
+        <td>${getStatusTag(o.status)}</td>
+      </tr>`;
+    });
+  </script>
+</body>
+</html>

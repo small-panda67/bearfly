@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Environment files and secrets
+.env
+**/.env
+**/.env.*
+!**/.env.example
+
+# Logs
+*.log
+**/*.log
+
+# Build output and caches
+dist/
+admin/dist/
+.vite/
+**/.vite/
+*.tsbuildinfo
+
+# IDE and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Local temporary files
+.github_remote_tmp/
+*.tmp

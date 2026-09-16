@@ -1,0 +1,25 @@
+<!--pages/address/address.wxml-->
+<view class="address-page">
+  <view class="address-list">
+    <view class="address-card" wx:for="{{addresses}}" wx:key="id">
+      <view class="address-info" bindtap="selectAddress" data-id="{{item.id}}">
+        <view class="address-top">
+          <text class="address-name">{{item.name}}</text>
+          <text class="address-phone">{{item.phone}}</text>
+          <text class="address-tag" wx:if="{{item.isDefault}}">默认</text>
+        </view>
+        <view class="address-detail">{{item.address}} {{item.roomNo}}</view>
+      </view>
+      <view class="address-actions">
+        <view class="action-item" bindtap="setDefault" data-id="{{item.id}}" wx:if="{{!item.isDefault}}">设为默认</view>
+        <view class="action-item" bindtap="editAddress" data-id="{{item.id}}">编辑</view>
+        <view class="action-item danger" bindtap="deleteAddress" data-id="{{item.id}}">删除</view>
+      </view>
+    </view>
+  </view>
+  <view class="empty" wx:if="{{addresses.length === 0}}">
+    <view class="empty-icon">📍</view>
+    <view>暂无收货地址</view>
+  </view>
+  <view class="add-btn" bindtap="addAddress">+ 新增地址</view>
+</view>

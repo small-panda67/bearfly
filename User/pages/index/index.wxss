@@ -1,0 +1,175 @@
+/* pages/index/index.wxss */
+.page { padding-bottom: 40rpx; }
+
+/* 顶部 */
+.header {
+  background: linear-gradient(180deg, #4A90D9 0%, #5BA0E8 100%);
+  padding: 20rpx 24rpx 40rpx;
+}
+.campus-bar {
+  display: flex;
+  align-items: center;
+  color: #fff;
+  margin-bottom: 20rpx;
+}
+.campus-icon { font-size: 28rpx; margin-right: 8rpx; }
+.campus-name { font-size: 30rpx; font-weight: 500; margin-right: 8rpx; }
+.arrow { font-size: 20rpx; opacity: 0.8; }
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  background: rgba(255,255,255,0.95);
+  border-radius: 40rpx;
+  padding: 16rpx 28rpx;
+}
+.search-icon { font-size: 28rpx; margin-right: 12rpx; }
+.search-placeholder { color: #999; font-size: 26rpx; }
+
+/* Banner */
+.banner-wrap { padding: 0 24rpx; margin-top: -20rpx; }
+.banner { height: 200rpx; border-radius: 16rpx; overflow: hidden; }
+.banner-item {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 40rpx;
+  color: #fff;
+  border-radius: 16rpx;
+}
+.banner-title { font-size: 34rpx; font-weight: 600; margin-bottom: 8rpx; }
+.banner-desc { font-size: 24rpx; opacity: 0.9; }
+
+/* 服务金刚位 */
+.service-grid {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 20rpx 24rpx;
+  padding: 30rpx 0;
+}
+.service-item {
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+.service-icon {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  margin-bottom: 12rpx;
+}
+.service-name { font-size: 24rpx; color: #333; }
+
+/* 公告 */
+.notice-bar {
+  display: flex;
+  align-items: center;
+  margin: 0 24rpx 20rpx;
+  padding: 20rpx 24rpx;
+}
+.notice-label {
+  background: #4A90D9;
+  color: #fff;
+  font-size: 20rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 6rpx;
+  margin-right: 16rpx;
+  flex-shrink: 0;
+}
+.notice-swiper { height: 36rpx; flex: 1; }
+.notice-text { font-size: 24rpx; color: #666; line-height: 36rpx; }
+
+/* 区块 */
+.section { margin: 0 24rpx 20rpx; }
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+.section-title { font-size: 32rpx; font-weight: 600; color: #333; }
+.section-more { font-size: 24rpx; color: #999; }
+
+/* 跑腿员横滑 */
+.rider-scroll { white-space: nowrap; }
+.rider-card {
+  display: inline-block;
+  width: 200rpx;
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-right: 16rpx;
+  text-align: center;
+  position: relative;
+  vertical-align: top;
+}
+.rider-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  background: #E8F2FD;
+  margin: 0 auto 12rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36rpx;
+}
+.rider-name { font-size: 26rpx; font-weight: 500; margin-bottom: 8rpx; }
+.rider-stats { display: flex; justify-content: center; gap: 12rpx; font-size: 20rpx; color: #999; }
+.star { color: #E89B3C; }
+.rider-status {
+  position: absolute;
+  top: 16rpx;
+  right: 16rpx;
+  font-size: 18rpx;
+  padding: 2rpx 10rpx;
+  border-radius: 8rpx;
+}
+.rider-status.online { background: #E6F7EC; color: #2BA471; }
+.rider-status.offline { background: #F0F1F5; color: #999; }
+
+/* 热门服务 */
+.hot-item {
+  display: flex;
+  align-items: center;
+  padding: 24rpx;
+  margin-bottom: 16rpx;
+}
+.hot-icon {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  margin-right: 20rpx;
+  flex-shrink: 0;
+}
+.hot-info { flex: 1; }
+.hot-name { font-size: 28rpx; font-weight: 500; margin-bottom: 4rpx; }
+.hot-desc { font-size: 22rpx; color: #999; }
+.hot-price { font-size: 28rpx; color: #E05252; font-weight: 600; flex-shrink: 0; }
+
+/* 角色切换 */
+.role-switch {
+  position: fixed;
+  bottom: 140rpx;
+  right: 24rpx;
+  z-index: 100;
+}
+.role-badge {
+  background: #4A90D9;
+  color: #fff;
+  padding: 12rpx 24rpx;
+  border-radius: 30rpx;
+  font-size: 22rpx;
+  box-shadow: 0 4rpx 16rpx rgba(74,144,217,0.4);
+}

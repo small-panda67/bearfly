@@ -1,0 +1,117 @@
+/* app.wxss - 全局样式 */
+page {
+  background-color: #F5F6FA;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  font-size: 28rpx;
+  color: #333;
+  line-height: 1.5;
+}
+
+/* 通用容器 */
+.container {
+  padding: 24rpx;
+  box-sizing: border-box;
+}
+
+/* 卡片 */
+.card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+}
+
+/* 按钮 */
+.btn-primary {
+  background: linear-gradient(135deg, #4A90D9, #357ABD);
+  color: #fff;
+  border-radius: 48rpx;
+  font-size: 30rpx;
+  font-weight: 500;
+  border: none;
+  line-height: 88rpx;
+  height: 88rpx;
+}
+.btn-primary::after { border: none; }
+
+.btn-outline {
+  background: #fff;
+  color: #4A90D9;
+  border: 2rpx solid #4A90D9;
+  border-radius: 48rpx;
+  font-size: 28rpx;
+  line-height: 80rpx;
+  height: 80rpx;
+}
+.btn-outline::after { border: none; }
+
+/* 标签 */
+.tag {
+  display: inline-block;
+  padding: 4rpx 16rpx;
+  border-radius: 8rpx;
+  font-size: 22rpx;
+  line-height: 1.4;
+}
+.tag-primary { background: #E8F2FD; color: #4A90D9; }
+.tag-success { background: #E6F7EC; color: #2BA471; }
+.tag-warning { background: #FFF4E5; color: #E89B3C; }
+.tag-danger { background: #FDECEC; color: #E05252; }
+.tag-gray { background: #F0F1F5; color: #888; }
+
+/* 分割线 */
+.divider {
+  height: 1rpx;
+  background: #EEE;
+  margin: 20rpx 0;
+}
+
+/*  flex 工具 */
+.flex { display: flex; }
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.flex-between { display: flex; align-items: center; justify-content: space-between; }
+.flex-1 { flex: 1; }
+
+/* 文字 */
+.text-primary { color: #4A90D9; }
+.text-success { color: #2BA471; }
+.text-warning { color: #E89B3C; }
+.text-danger { color: #E05252; }
+.text-gray { color: #999; }
+.text-sm { font-size: 24rpx; }
+.text-lg { font-size: 32rpx; }
+.text-bold { font-weight: 600; }
+
+/* 空状态 */
+.empty {
+  text-align: center;
+  padding: 120rpx 0;
+  color: #999;
+  font-size: 26rpx;
+}
+.empty-icon {
+  font-size: 80rpx;
+  margin-bottom: 20rpx;
+  opacity: 0.3;
+}
+
+/* 表单 */
+.form-item {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #F0F1F5;
+}
+.form-label {
+  width: 180rpx;
+  color: #333;
+  font-size: 28rpx;
+  flex-shrink: 0;
+}
+.form-input {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333;
+}
+.form-placeholder { color: #BBB; }

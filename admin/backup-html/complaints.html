@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>投诉处理 - 校园跑腿管理后台</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="layout">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="main">
+      <div class="header" id="header"></div>
+      <div class="content">
+        <div class="search-bar">
+          <select class="search-select">
+            <option>全部状态</option>
+            <option>待处理</option>
+            <option>处理中</option>
+            <option>已完成</option>
+          </select>
+          <select class="search-select">
+            <option>全部类型</option>
+            <option>服务态度</option>
+            <option>配送超时</option>
+            <option>物品损坏</option>
+            <option>费用争议</option>
+            <option>其他</option>
+          </select>
+          <button class="btn btn-primary">搜索</button>
+        </div>
+
+        <div class="card">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>工单号</th>
+                <th>投诉类型</th>
+                <th>投诉人</th>
+                <th>被投诉人</th>
+                <th>关联订单</th>
+                <th>投诉内容</th>
+                <th>提交时间</th>
+                <th>状态</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>TS001</td>
+                <td><span class="tag red">物品损坏</span></td>
+                <td>张同学</td>
+                <td>小明</td>
+                <td>OD20260915001</td>
+                <td>快递外包装破损，内物有划痕</td>
+                <td>2026-09-15 15:00</td>
+                <td><span class="tag orange">待处理</span></td>
+                <td><div class="action-group"><button class="btn-link">处理</button><button class="btn-link">详情</button></div></td>
+              </tr>
+              <tr>
+                <td>TS002</td>
+                <td><span class="tag orange">配送超时</span></td>
+                <td>李同学</td>
+                <td>小红</td>
+                <td>OD20260914002</td>
+                <td>承诺30分钟送达，实际用了50分钟</td>
+                <td>2026-09-14 13:30</td>
+                <td><span class="tag blue">处理中</span></td>
+                <td><div class="action-group"><button class="btn-link">处理</button><button class="btn-link">详情</button></div></td>
+              </tr>
+              <tr>
+                <td>TS003</td>
+                <td><span class="tag gray">服务态度</span></td>
+                <td>王同学</td>
+                <td>小刚</td>
+                <td>OD20260913001</td>
+                <td>跑腿员态度不好，沟通不顺畅</td>
+                <td>2026-09-13 16:00</td>
+                <td><span class="tag green">已完成</span></td>
+                <td><button class="btn-link">详情</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="js/app.js"></script>
+  <script>initPage('complaints', '投诉处理');</script>
+</body>
+</html>

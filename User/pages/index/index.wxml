@@ -1,0 +1,88 @@
+<!--pages/index/index.wxml 首页-->
+<view class="page">
+  <!-- 顶部定位与搜索 -->
+  <view class="header">
+    <view class="campus-bar" bindtap="switchCampus">
+      <text class="campus-icon">📍</text>
+      <text class="campus-name">{{campusName}}</text>
+      <text class="arrow">▼</text>
+    </view>
+    <view class="search-bar" bindtap="goSearch">
+      <text class="search-icon">🔍</text>
+      <text class="search-placeholder">搜索服务 / 跑腿员</text>
+    </view>
+  </view>
+
+  <!-- Banner 轮播 -->
+  <view class="banner-wrap">
+    <swiper class="banner" indicator-dots autoplay interval="4000" circular>
+      <swiper-item wx:for="{{banners}}" wx:key="id">
+        <view class="banner-item" style="background: {{item.bg}}">
+          <view class="banner-title">{{item.title}}</view>
+          <view class="banner-desc">{{item.desc}}</view>
+        </view>
+      </swiper-item>
+    </swiper>
+  </view>
+
+  <!-- 服务金刚位 -->
+  <view class="service-grid card">
+    <view class="service-item" wx:for="{{services}}" wx:key="id" bindtap="goService" data-id="{{item.id}}">
+      <view class="service-icon" style="background: {{item.bg}}">{{item.icon}}</view>
+      <view class="service-name">{{item.name}}</view>
+    </view>
+  </view>
+
+  <!-- 公告栏 -->
+  <view class="notice-bar card">
+    <text class="notice-label">公告</text>
+    <swiper class="notice-swiper" vertical autoplay interval="3000" circular>
+      <swiper-item wx:for="{{notices}}" wx:key="id">
+        <text class="notice-text">{{item.content}}</text>
+      </swiper-item>
+    </swiper>
+  </view>
+
+  <!-- 热门跑腿员 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">热门跑腿员</text>
+      <text class="section-more" bindtap="goRiderList">查看全部 ›</text>
+    </view>
+    <scroll-view class="rider-scroll" scroll-x>
+      <view class="rider-card" wx:for="{{hotRiders}}" wx:key="id">
+        <view class="rider-avatar">{{item.avatar}}</view>
+        <view class="rider-name">{{item.name}}</view>
+        <view class="rider-stats">
+          <text class="star">⭐ {{item.rating}}</text>
+          <text class="orders">{{item.orders}}单</text>
+        </view>
+        <view class="rider-status {{item.online ? 'online' : 'offline'}}">
+          {{item.online ? '在线' : '离线'}}
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 热门服务推荐 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">热门服务</text>
+    </view>
+    <view class="hot-list">
+      <view class="hot-item card" wx:for="{{hotServices}}" wx:key="id" bindtap="goService" data-id="{{item.id}}">
+        <view class="hot-icon" style="background: {{item.bg}}">{{item.icon}}</view>
+        <view class="hot-info">
+          <view class="hot-name">{{item.name}}</view>
+          <view class="hot-desc">{{item.desc}}</view>
+        </view>
+        <view class="hot-price">¥{{item.price}}起</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部角色切换 -->
+  <view class="role-switch" wx:if="{{role !== 'user'}}">
+    <view class="role-badge" bindtap="switchToUser">👤 用户模式</view>
+  </view>
+</view>

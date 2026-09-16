@@ -1,0 +1,130 @@
+<!--pages/order-express/order-express.wxml 快递代取下单-->
+<view class="order-page">
+  <!-- 取件信息 -->
+  <view class="section-card">
+    <view class="card-title">
+      <text class="title-icon">📦</text>
+      <text>取件信息</text>
+    </view>
+    <view class="form-row" bindtap="selectStation">
+      <view class="row-label">快递驿站</view>
+      <view class="row-value {{station ? '' : 'placeholder'}}">
+        {{station || '请选择快递驿站'}}
+      </view>
+      <text class="row-arrow">›</text>
+    </view>
+    <view class="form-row">
+      <view class="row-label">取件码</view>
+      <input class="row-input" placeholder="请输入取件码/快递单号" value="{{pickupCode}}" bindinput="onPickupCodeInput" />
+    </view>
+    <view class="form-row">
+      <view class="row-label">收件人</view>
+      <input class="row-input" placeholder="收件人姓名" value="{{receiverName}}" bindinput="onReceiverNameInput" />
+    </view>
+    <view class="form-row">
+      <view class="row-label">联系电话</view>
+      <input class="row-input" type="number" maxlength="11" placeholder="收件人手机号" value="{{receiverPhone}}" bindinput="onReceiverPhoneInput" />
+    </view>
+  </view>
+
+  <!-- 快递规格 -->
+  <view class="section-card">
+    <view class="card-title">
+      <text class="title-icon">📏</text>
+      <text>快递规格</text>
+    </view>
+    <view class="size-options">
+      <view class="size-option {{size === 'small' ? 'active' : ''}}" bindtap="selectSize" data-size="small">
+        <view class="size-name">小件</view>
+        <view class="size-desc">文件/小包裹</view>
+        <view class="size-price">¥2</view>
+      </view>
+      <view class="size-option {{size === 'medium' ? 'active' : ''}}" bindtap="selectSize" data-size="medium">
+        <view class="size-name">中件</view>
+        <view class="size-desc">常规包裹</view>
+        <view class="size-price">¥4</view>
+      </view>
+      <view class="size-option {{size === 'large' ? 'active' : ''}}" bindtap="selectSize" data-size="large">
+        <view class="size-name">大件</view>
+        <view class="size-desc">行李箱/重物</view>
+        <view class="size-price">¥6</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 送达信息 -->
+  <view class="section-card">
+    <view class="card-title">
+      <text class="title-icon">📍</text>
+      <text>送达信息</text>
+    </view>
+    <view class="form-row" bindtap="selectAddress">
+      <view class="row-label">送达地址</view>
+      <view class="row-value {{address ? '' : 'placeholder'}}">
+        {{address || '请选择送达地址'}}
+      </view>
+      <text class="row-arrow">›</text>
+    </view>
+    <view class="form-row">
+      <view class="row-label">房间号</view>
+      <input class="row-input" placeholder="如：3栋502室" value="{{roomNo}}" bindinput="onRoomNoInput" />
+    </view>
+    <view class="form-row" bindtap="selectTime">
+      <view class="row-label">期望送达</view>
+      <view class="row-value {{deliveryTime ? '' : 'placeholder'}}">
+        {{deliveryTime || '请选择送达时间'}}
+      </view>
+      <text class="row-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 保价与备注 -->
+  <view class="section-card">
+    <view class="form-row">
+      <view class="row-label">物品保价</view>
+      <switch class="row-switch" checked="{{insured}}" bindchange="onInsuredChange" color="#4A90D9" />
+    </view>
+    <view class="form-row remark-row">
+      <view class="row-label">备注信息</view>
+      <textarea class="row-textarea" placeholder="如：送上楼、放门口、轻拿轻放等" value="{{remark}}" bindinput="onRemarkInput" maxlength="100" />
+    </view>
+  </view>
+
+  <!-- 价格预估 -->
+  <view class="price-card">
+    <view class="price-row">
+      <text class="price-label">基础配送费</text>
+      <text class="price-value">¥{{baseFee}}</text>
+    </view>
+    <view class="price-row" wx:if="{{distanceFee > 0}}">
+      <text class="price-label">距离加价</text>
+      <text class="price-value">+¥{{distanceFee}}</text>
+    </view>
+    <view class="price-row" wx:if="{{insured}}">
+      <text class="price-label">保价费</text>
+      <text class="price-value">+¥1</text>
+    </view>
+    <view class="price-row tip-row">
+      <text class="price-label">小费（可选）</text>
+      <view class="tip-options">
+        <view class="tip-option {{tip === 0 ? 'active' : ''}}" bindtap="selectTip" data-tip="0">不加</view>
+        <view class="tip-option {{tip === 1 ? 'active' : ''}}" bindtap="selectTip" data-tip="1">+1</view>
+        <view class="tip-option {{tip === 2 ? 'active' : ''}}" bindtap="selectTip" data-tip="2">+2</view>
+        <view class="tip-option {{tip === 5 ? 'active' : ''}}" bindtap="selectTip" data-tip="5">+5</view>
+      </view>
+    </view>
+    <view class="price-total">
+      <text class="total-label">预估总价</text>
+      <text class="total-value">¥{{totalPrice}}</text>
+    </view>
+  </view>
+
+  <!-- 底部提交栏 -->
+  <view class="submit-bar">
+    <view class="submit-price">
+      <text class="submit-total">¥{{totalPrice}}</text>
+      <text class="submit-desc">预估费用</text>
+    </view>
+    <button class="btn-primary submit-btn" bindtap="submitOrder">确认下单</button>
+  </view>
+</view>

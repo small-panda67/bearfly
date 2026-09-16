@@ -1,0 +1,67 @@
+<!--pages/order-canteen/order-canteen.wxml 食堂代购下单-->
+<view class="canteen-page">
+  <view class="section-card">
+    <view class="card-title">🍜 选择食堂</view>
+    <view class="canteen-list">
+      <view class="canteen-item {{selectedCanteen === item.id ? 'active' : ''}}" wx:for="{{canteens}}" wx:key="id" bindtap="selectCanteen" data-id="{{item.id}}">
+        <view class="canteen-name">{{item.name}}</view>
+        <view class="canteen-desc">{{item.desc}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="section-card">
+    <view class="card-title">📝 菜品清单</view>
+    <view class="food-input-area">
+      <textarea class="food-textarea" placeholder="请输入菜品名称和数量，例如：&#10;红烧肉盖饭 x1&#10;番茄炒蛋 x1&#10;不要辣" value="{{foodList}}" bindinput="onFoodInput" maxlength="200"></textarea>
+      <view class="upload-btn" bindtap="uploadImage">📷 上传菜品图片</view>
+    </view>
+  </view>
+
+  <view class="section-card">
+    <view class="form-row">
+      <view class="row-label">餐费支付</view>
+      <radio-group class="radio-group" bindchange="onPayTypeChange">
+        <label class="radio-item">
+          <radio value="user" checked="{{payType === 'user'}}" color="#4A90D9" />线上支付
+        </label>
+        <label class="radio-item">
+          <radio value="rider" checked="{{payType === 'rider'}}" color="#4A90D9" />跑腿员代付
+        </label>
+      </radio-group>
+    </view>
+    <view class="form-row" wx:if="{{payType === 'rider'}}">
+      <view class="row-label">预估餐费</view>
+      <input class="row-input" type="digit" placeholder="请输入预估餐费金额" value="{{foodPrice}}" bindinput="onFoodPriceInput" />
+    </view>
+  </view>
+
+  <view class="section-card">
+    <view class="form-row" bindtap="selectAddress">
+      <view class="row-label">送达地址</view>
+      <view class="row-value {{address ? '' : 'placeholder'}}">{{address || '请选择送达地址'}}</view>
+      <text class="row-arrow">›</text>
+    </view>
+    <view class="form-row">
+      <view class="row-label">房间号</view>
+      <input class="row-input" placeholder="如：3栋502室" value="{{roomNo}}" bindinput="onRoomNoInput" />
+    </view>
+    <view class="form-row" bindtap="selectTime">
+      <view class="row-label">期望送达</view>
+      <view class="row-value {{deliveryTime ? '' : 'placeholder'}}">{{deliveryTime || '请选择送达时间'}}</view>
+      <text class="row-arrow">›</text>
+    </view>
+    <view class="form-row remark-row">
+      <view class="row-label">备注</view>
+      <textarea class="row-textarea" placeholder="口味要求、特殊说明等" value="{{remark}}" bindinput="onRemarkInput" maxlength="100"></textarea>
+    </view>
+  </view>
+
+  <view class="submit-bar">
+    <view class="submit-price">
+      <text class="submit-total">¥{{totalPrice}}</text>
+      <text class="submit-desc">含代购费¥{{serviceFee}}{{payType === 'rider' ? '+餐费¥' + foodPrice : ''}}</text>
+    </view>
+    <button class="btn-primary submit-btn" bindtap="submitOrder">确认下单</button>
+  </view>
+</view>

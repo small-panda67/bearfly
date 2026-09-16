@@ -1,0 +1,137 @@
+/* pages/rider-hall/rider-hall.wxss */
+.hall-page { min-height: 100vh; background: #F5F6FA; padding-bottom: 40rpx; }
+
+/* 头部 */
+.hall-header {
+  background: linear-gradient(180deg, #2BA471 0%, #3DBB85 100%);
+  padding: 20rpx 24rpx 32rpx;
+}
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+.rider-status {
+  display: flex;
+  align-items: center;
+  background: rgba(255,255,255,0.2);
+  padding: 10rpx 24rpx;
+  border-radius: 30rpx;
+  color: #fff;
+  font-size: 26rpx;
+}
+.rider-status.offline { background: rgba(0,0,0,0.2); }
+.status-dot {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+  background: #fff;
+  margin-right: 10rpx;
+}
+.rider-status.online .status-dot {
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.header-actions { display: flex; gap: 16rpx; }
+.action-btn {
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  font-size: 24rpx;
+  padding: 10rpx 20rpx;
+  border-radius: 24rpx;
+}
+
+/* 数据概览 */
+.stats-bar {
+  background: rgba(255,255,255,0.15);
+  border-radius: 16rpx;
+  display: flex;
+  padding: 24rpx 0;
+}
+.stat-item {
+  flex: 1;
+  text-align: center;
+  color: #fff;
+}
+.stat-value { font-size: 36rpx; font-weight: 700; margin-bottom: 4rpx; }
+.stat-label { font-size: 22rpx; opacity: 0.9; }
+
+/* 订单列表 */
+.order-list { padding: 20rpx 24rpx; }
+.order-card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.04);
+}
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+.order-type { display: flex; align-items: center; }
+.type-icon { font-size: 32rpx; margin-right: 12rpx; }
+.type-name { font-size: 28rpx; font-weight: 600; color: #333; }
+.order-price { font-size: 36rpx; color: #E05252; font-weight: 700; }
+
+/* 路线 */
+.order-route {
+  background: #F9FAFC;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  margin-bottom: 16rpx;
+}
+.route-point {
+  display: flex;
+  align-items: center;
+  padding: 6rpx 0;
+}
+.point-dot {
+  width: 20rpx;
+  height: 20rpx;
+  border-radius: 50%;
+  margin-right: 16rpx;
+  flex-shrink: 0;
+}
+.point-dot.pickup { background: #4A90D9; }
+.point-dot.delivery { background: #2BA471; }
+.point-text { flex: 1; font-size: 26rpx; color: #333; }
+.point-distance { font-size: 22rpx; color: #999; flex-shrink: 0; }
+.route-line {
+  width: 2rpx;
+  height: 20rpx;
+  background: #DDD;
+  margin-left: 9rpx;
+}
+
+.order-meta {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 16rpx;
+}
+.meta-item { font-size: 22rpx; color: #999; }
+
+.order-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 16rpx;
+  border-top: 1rpx solid #F0F1F5;
+}
+.order-time { font-size: 22rpx; color: #BBB; }
+.grab-btn {
+  background: linear-gradient(135deg, #2BA471, #3DBB85);
+  color: #fff;
+  font-size: 26rpx;
+  font-weight: 600;
+  padding: 14rpx 40rpx;
+  border-radius: 32rpx;
+}
+
+.empty-tip { font-size: 22rpx; color: #BBB; margin-top: 12rpx; }

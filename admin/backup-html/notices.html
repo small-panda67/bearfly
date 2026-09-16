@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>公告管理 - 校园跑腿管理后台</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="layout">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="main">
+      <div class="header" id="header"></div>
+      <div class="content">
+        <div class="search-bar">
+          <button class="btn btn-primary">+ 发布公告</button>
+        </div>
+        <div class="card">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>标题</th>
+                <th>类型</th>
+                <th>目标人群</th>
+                <th>发布时间</th>
+                <th>状态</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>国庆期间配送时间调整通知</td><td><span class="tag orange">重要通知</span></td><td>全部用户</td><td>2026-09-25 10:00</td><td><span class="tag green">已发布</span></td><td><div class="action-group"><button class="btn-link">编辑</button><button class="btn-link danger">下架</button></div></td></tr>
+              <tr><td>新用户注册送5元优惠券</td><td><span class="tag blue">活动公告</span></td><td>新用户</td><td>2026-09-01 09:00</td><td><span class="tag green">已发布</span></td><td><div class="action-group"><button class="btn-link">编辑</button><button class="btn-link danger">下架</button></div></td></tr>
+              <tr><td>跑腿员入驻奖励政策更新</td><td><span class="tag purple">骑手公告</span></td><td>跑腿员</td><td>2026-08-15 14:00</td><td><span class="tag green">已发布</span></td><td><div class="action-group"><button class="btn-link">编辑</button><button class="btn-link danger">下架</button></div></td></tr>
+              <tr><td>系统维护通知（9月20日）</td><td><span class="tag gray">系统通知</span></td><td>全部用户</td><td>2026-09-18 18:00</td><td><span class="tag gray">草稿</span></td><td><div class="action-group"><button class="btn-link">编辑</button><button class="btn-link">发布</button></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="js/app.js"></script>
+  <script>initPage('notices', '公告管理');</script>
+</body>
+</html>

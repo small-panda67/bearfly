@@ -1,0 +1,111 @@
+<!--pages/order-detail/order-detail.wxml 订单详情-->
+<view class="detail-page">
+  <!-- 状态进度条 -->
+  <view class="status-header">
+    <view class="status-title">{{order.statusText}}</view>
+    <view class="status-desc">{{order.statusDesc}}</view>
+    <view class="progress-bar">
+      <view class="progress-step {{order.progress >= 1 ? 'done' : ''}}">
+        <view class="step-dot">1</view>
+        <view class="step-text">已下单</view>
+      </view>
+      <view class="progress-line {{order.progress >= 2 ? 'done' : ''}}"></view>
+      <view class="progress-step {{order.progress >= 2 ? 'done' : ''}}">
+        <view class="step-dot">2</view>
+        <view class="step-text">已接单</view>
+      </view>
+      <view class="progress-line {{order.progress >= 3 ? 'done' : ''}}"></view>
+      <view class="progress-step {{order.progress >= 3 ? 'done' : ''}}">
+        <view class="step-dot">3</view>
+        <view class="step-text">配送中</view>
+      </view>
+      <view class="progress-line {{order.progress >= 4 ? 'done' : ''}}"></view>
+      <view class="progress-step {{order.progress >= 4 ? 'done' : ''}}">
+        <view class="step-dot">4</view>
+        <view class="step-text">已送达</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 跑腿员信息 -->
+  <view class="rider-card card" wx:if="{{order.rider}}">
+    <view class="rider-avatar">{{order.rider.avatar}}</view>
+    <view class="rider-info">
+      <view class="rider-name">{{order.rider.name}}</view>
+      <view class="rider-meta">⭐ {{order.rider.rating}} · 完成{{order.rider.orders}}单</view>
+    </view>
+    <view class="rider-actions">
+      <view class="rider-btn" bindtap="callRider">📞</view>
+      <view class="rider-btn" bindtap="messageRider">💬</view>
+    </view>
+  </view>
+
+  <!-- 配送轨迹 -->
+  <view class="track-card card" wx:if="{{order.progress >= 2}}">
+    <view class="card-title">配送轨迹</view>
+    <view class="track-map">
+      <view class="map-placeholder">
+        <text class="map-icon">🗺️</text>
+        <text>地图轨迹加载中...</text>
+      </view>
+    </view>
+    <view class="track-timeline">
+      <view class="track-item" wx:for="{{order.tracks}}" wx:key="time">
+        <view class="track-dot {{item.active ? 'active' : ''}}"></view>
+        <view class="track-content">
+          <view class="track-text">{{item.text}}</view>
+          <view class="track-time">{{item.time}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 订单信息 -->
+  <view class="info-card card">
+    <view class="card-title">订单信息</view>
+    <view class="info-row">
+      <text class="info-label">服务类型</text>
+      <text class="info-value">{{order.typeName}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-label">取件地点</text>
+      <text class="info-value">{{order.pickup}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-label">送达地址</text>
+      <text class="info-value">{{order.delivery}}</text>
+    </view>
+    <view class="info-row" wx:if="{{order.remark}}">
+      <text class="info-label">备注</text>
+      <text class="info-value">{{order.remark}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-label">订单编号</text>
+      <text class="info-value">{{order.id}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-label">下单时间</text>
+      <text class="info-value">{{order.createTime}}</text>
+    </view>
+  </view>
+
+  <!-- 费用明细 -->
+  <view class="fee-card card">
+    <view class="card-title">费用明细</view>
+    <view class="fee-row" wx:for="{{order.fees}}" wx:key="name">
+      <text class="fee-name">{{item.name}}</text>
+      <text class="fee-value">{{item.value}}</text>
+    </view>
+    <view class="fee-total">
+      <text class="total-label">实付金额</text>
+      <text class="total-value">¥{{order.totalPrice}}</text>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-bar" wx:if="{{order.actions.length > 0}}">
+    <view class="bottom-btn {{action.type}}" wx:for="{{order.actions}}" wx:key="text" bindtap="handleAction" data-action="{{action.text}}">
+      {{action.text}}
+    </view>
+  </view>
+</view>

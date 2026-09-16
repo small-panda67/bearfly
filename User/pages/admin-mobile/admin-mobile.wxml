@@ -1,0 +1,104 @@
+<!--pages/admin-mobile/admin-mobile.wxml 移动端管理员后台-->
+<view class="admin-page">
+  <!-- 头部 -->
+  <view class="admin-header">
+    <view class="admin-info">
+      <view class="admin-avatar">🛡️</view>
+      <view class="admin-detail">
+        <view class="admin-name">{{adminInfo.name || adminInfo.username}}</view>
+        <view class="admin-role">{{adminInfo.role === 'super_admin' ? '超级管理员' : '管理员'}}</view>
+      </view>
+    </view>
+    <view class="logout-btn" bindtap="logout">退出</view>
+  </view>
+
+  <!-- 数据概览 -->
+  <view class="overview-card">
+    <view class="overview-title">今日数据概览</view>
+    <view class="overview-grid">
+      <view class="overview-item">
+        <view class="overview-value">{{overview.orders}}</view>
+        <view class="overview-label">今日订单</view>
+      </view>
+      <view class="overview-item">
+        <view class="overview-value">¥{{overview.gmv}}</view>
+        <view class="overview-label">交易额</view>
+      </view>
+      <view class="overview-item">
+        <view class="overview-value">{{overview.newUsers}}</view>
+        <view class="overview-label">新增用户</view>
+      </view>
+      <view class="overview-item">
+        <view class="overview-value">{{overview.activeRiders}}</view>
+        <view class="overview-label">活跃骑手</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 待办事项 -->
+  <view class="todo-card card" wx:if="{{todos.length > 0}}">
+    <view class="card-title">待处理事项</view>
+    <view class="todo-item" wx:for="{{todos}}" wx:key="id" bindtap="handleTodo" data-type="{{item.type}}">
+      <view class="todo-icon {{item.type}}">{{item.icon}}</view>
+      <view class="todo-content">
+        <view class="todo-name">{{item.name}}</view>
+        <view class="todo-desc">{{item.desc}}</view>
+      </view>
+      <view class="todo-count">{{item.count}}</view>
+      <text class="todo-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 功能菜单 -->
+  <view class="menu-section">
+    <view class="menu-title">运营管理</view>
+    <view class="menu-grid">
+      <view class="menu-item" bindtap="goModule" data-module="orders">
+        <view class="menu-icon">📦</view>
+        <view class="menu-name">订单管理</view>
+      </view>
+      <view class="menu-item" bindtap="goModule" data-module="users">
+        <view class="menu-icon">👥</view>
+        <view class="menu-name">用户管理</view>
+      </view>
+      <view class="menu-item" bindtap="goModule" data-module="riders">
+        <view class="menu-icon">🏃</view>
+        <view class="menu-name">骑手管理</view>
+      </view>
+      <view class="menu-item" bindtap="goModule" data-module="finance">
+        <view class="menu-icon">💰</view>
+        <view class="menu-name">财务管理</view>
+      </view>
+      <view class="menu-item" bindtap="goModule" data-module="verify">
+        <view class="menu-icon">✅</view>
+        <view class="menu-name">实名审核</view>
+      </view>
+      <view class="menu-item" bindtap="goModule" data-module="complaint">
+        <view class="menu-icon">⚠️</view>
+        <view class="menu-name">投诉处理</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="menu-section">
+    <view class="menu-title">系统配置</view>
+    <view class="menu-grid">
+      <view class="menu-item" bindtap="goModule" data-module="pricing">
+        <view class="menu-icon">💵</view>
+        <view class="menu-name">价格配置</view>
+      </view>
+      <view class="menu-item" bindtap="goModule" data-module="campus">
+        <view class="menu-icon">🏫</view>
+        <view class="menu-name">校区管理</view>
+      </view>
+      <view class="menu-item" bindtap="goModule" data-module="coupon">
+        <view class="menu-icon">🎫</view>
+        <view class="menu-name">优惠券</view>
+      </view>
+      <view class="menu-item" bindtap="goModule" data-module="notice">
+        <view class="menu-icon">📢</view>
+        <view class="menu-name">公告发布</view>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,155 @@
+/* pages/order-express/order-express.wxss */
+.order-page {
+  padding: 20rpx 24rpx 160rpx;
+}
+
+.section-card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 8rpx 24rpx;
+  margin-bottom: 20rpx;
+}
+.card-title {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 0 16rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 1rpx solid #F5F6FA;
+}
+.title-icon { margin-right: 12rpx; font-size: 32rpx; }
+
+.form-row {
+  display: flex;
+  align-items: center;
+  padding: 28rpx 0;
+  border-bottom: 1rpx solid #F5F6FA;
+  min-height: 40rpx;
+}
+.form-row:last-child { border-bottom: none; }
+.row-label {
+  width: 160rpx;
+  font-size: 28rpx;
+  color: #333;
+  flex-shrink: 0;
+}
+.row-value {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333;
+}
+.row-value.placeholder { color: #BBB; }
+.row-input {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333;
+}
+.row-arrow {
+  color: #CCC;
+  font-size: 32rpx;
+  margin-left: 12rpx;
+}
+.row-switch { transform: scale(0.85); }
+
+.remark-row { align-items: flex-start; }
+.row-textarea {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333;
+  min-height: 80rpx;
+  line-height: 1.5;
+}
+
+/* 规格选择 */
+.size-options {
+  display: flex;
+  gap: 16rpx;
+  padding: 24rpx 0;
+}
+.size-option {
+  flex: 1;
+  border: 2rpx solid #E0E0E0;
+  border-radius: 12rpx;
+  padding: 20rpx 12rpx;
+  text-align: center;
+  transition: all 0.2s;
+}
+.size-option.active {
+  border-color: #4A90D9;
+  background: #F0F7FF;
+}
+.size-name { font-size: 28rpx; font-weight: 600; color: #333; margin-bottom: 4rpx; }
+.size-desc { font-size: 20rpx; color: #999; margin-bottom: 8rpx; }
+.size-price { font-size: 26rpx; color: #E05252; font-weight: 600; }
+
+/* 价格卡片 */
+.price-card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+}
+.price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12rpx 0;
+}
+.price-label { font-size: 26rpx; color: #666; }
+.price-value { font-size: 26rpx; color: #333; }
+.tip-row { align-items: flex-start; }
+.tip-options {
+  display: flex;
+  gap: 12rpx;
+}
+.tip-option {
+  padding: 8rpx 20rpx;
+  border: 1rpx solid #E0E0E0;
+  border-radius: 24rpx;
+  font-size: 22rpx;
+  color: #666;
+}
+.tip-option.active {
+  border-color: #4A90D9;
+  background: #F0F7FF;
+  color: #4A90D9;
+}
+.price-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20rpx;
+  margin-top: 12rpx;
+  border-top: 1rpx dashed #E0E0E0;
+}
+.total-label { font-size: 28rpx; color: #333; font-weight: 500; }
+.total-value { font-size: 40rpx; color: #E05252; font-weight: 700; }
+
+/* 底部提交栏 */
+.submit-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  padding: 20rpx 24rpx;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 -4rpx 20rpx rgba(0,0,0,0.06);
+  z-index: 100;
+}
+.submit-price {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.submit-total { font-size: 36rpx; color: #E05252; font-weight: 700; }
+.submit-desc { font-size: 20rpx; color: #999; }
+.submit-btn {
+  width: 280rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  font-size: 30rpx;
+  padding: 0;
+}

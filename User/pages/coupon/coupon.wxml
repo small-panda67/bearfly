@@ -1,0 +1,26 @@
+<!--pages/coupon/coupon.wxml-->
+<view class="coupon-page">
+  <view class="coupon-tabs">
+    <view class="tab {{activeTab === 'available' ? 'active' : ''}}" bindtap="switchTab" data-tab="available">可使用</view>
+    <view class="tab {{activeTab === 'used' ? 'active' : ''}}" bindtap="switchTab" data-tab="used">已使用</view>
+    <view class="tab {{activeTab === 'expired' ? 'active' : ''}}" bindtap="switchTab" data-tab="expired">已过期</view>
+  </view>
+  <view class="coupon-list">
+    <view class="coupon-card {{item.status}}" wx:for="{{coupons}}" wx:key="id">
+      <view class="coupon-left">
+        <view class="coupon-amount"><text class="symbol">¥</text>{{item.amount}}</view>
+        <view class="coupon-condition">满{{item.threshold}}可用</view>
+      </view>
+      <view class="coupon-right">
+        <view class="coupon-name">{{item.name}}</view>
+        <view class="coupon-desc">{{item.desc}}</view>
+        <view class="coupon-expire">{{item.expire}}</view>
+        <view class="coupon-btn" wx:if="{{item.status === 'available'}}" bindtap="useCoupon" data-id="{{item.id}}">立即使用</view>
+      </view>
+    </view>
+  </view>
+  <view class="empty" wx:if="{{coupons.length === 0}}">
+    <view class="empty-icon">🎫</view>
+    <view>暂无优惠券</view>
+  </view>
+</view>

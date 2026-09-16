@@ -1,0 +1,71 @@
+<!--pages/rider-hall/rider-hall.wxml 跑腿员接单大厅-->
+<view class="hall-page">
+  <!-- 顶部筛选与状态 -->
+  <view class="hall-header">
+    <view class="header-top">
+      <view class="rider-status {{isOnline ? 'online' : 'offline'}}" bindtap="toggleOnline">
+        <view class="status-dot"></view>
+        <text>{{isOnline ? '接单中' : '已休息'}}</text>
+      </view>
+      <view class="header-actions">
+        <view class="action-btn" bindtap="openFilter">🔍 筛选</view>
+        <view class="action-btn" bindtap="openAutoAccept">⚡ 自动接单</view>
+      </view>
+    </view>
+    <!-- 数据概览 -->
+    <view class="stats-bar">
+      <view class="stat-item">
+        <view class="stat-value">{{todayStats.orders}}</view>
+        <view class="stat-label">今日接单</view>
+      </view>
+      <view class="stat-item">
+        <view class="stat-value">¥{{todayStats.income}}</view>
+        <view class="stat-label">今日收入</view>
+      </view>
+      <view class="stat-item">
+        <view class="stat-value">{{todayStats.rating}}</view>
+        <view class="stat-label">好评率</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 订单列表 -->
+  <view class="order-list">
+    <view class="order-card" wx:for="{{orders}}" wx:key="id">
+      <view class="order-header">
+        <view class="order-type">
+          <text class="type-icon">{{item.icon}}</text>
+          <text class="type-name">{{item.typeName}}</text>
+        </view>
+        <view class="order-price">¥{{item.price}}</view>
+      </view>
+      <view class="order-route">
+        <view class="route-point">
+          <view class="point-dot pickup"></view>
+          <view class="point-text">{{item.pickup}}</view>
+          <view class="point-distance">{{item.distance}}m</view>
+        </view>
+        <view class="route-line"></view>
+        <view class="route-point">
+          <view class="point-dot delivery"></view>
+          <view class="point-text">{{item.delivery}}</view>
+        </view>
+      </view>
+      <view class="order-meta">
+        <text class="meta-item">⏱ {{item.timeLimit}}</text>
+        <text class="meta-item">📦 {{item.size}}</text>
+        <text class="meta-item" wx:if="{{item.tip > 0}}">💰 小费¥{{item.tip}}</text>
+      </view>
+      <view class="order-footer">
+        <view class="order-time">{{item.publishTime}}</view>
+        <view class="grab-btn" bindtap="grabOrder" data-id="{{item.id}}">立即抢单</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty" wx:if="{{orders.length === 0}}">
+    <view class="empty-icon">📭</view>
+    <view>暂无可抢订单</view>
+    <view class="empty-tip">保持在线，新订单会第一时间通知</view>
+  </view>
+</view>

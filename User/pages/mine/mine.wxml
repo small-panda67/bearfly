@@ -1,0 +1,113 @@
+<!--pages/mine/mine.wxml 个人中心-->
+<view class="mine-page">
+  <!-- 用户信息头部 -->
+  <view class="user-header">
+    <view class="user-info" bindtap="goProfile">
+      <view class="user-avatar">{{user.avatar}}</view>
+      <view class="user-detail">
+        <view class="user-name">
+          {{user.nickname}}
+          <text class="verify-tag {{user.verified ? 'verified' : ''}}">
+            {{user.verified ? '已认证' : '未认证'}}
+          </text>
+        </view>
+        <view class="user-campus">📍 {{user.campus}} · 查看个人资料 ›</view>
+      </view>
+    </view>
+    <!-- 钱包卡片 -->
+    <view class="wallet-card" bindtap="goWallet">
+      <view class="wallet-item">
+        <view class="wallet-value">¥{{user.balance}}</view>
+        <view class="wallet-label">余额</view>
+      </view>
+      <view class="wallet-divider"></view>
+      <view class="wallet-item" bindtap="goCoupon">
+        <view class="wallet-value">{{user.coupons}}</view>
+        <view class="wallet-label">优惠券</view>
+      </view>
+      <view class="wallet-divider"></view>
+      <view class="wallet-item">
+        <view class="wallet-value">{{user.points}}</view>
+        <view class="wallet-label">积分</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 订单快捷入口 -->
+  <view class="section-card">
+    <view class="section-title">
+      <text>我的订单</text>
+      <text class="section-more" bindtap="goAllOrders">全部订单 ›</text>
+    </view>
+    <view class="order-shortcuts">
+      <view class="shortcut-item" bindtap="goOrders" data-status="pending">
+        <view class="shortcut-icon">⏳</view>
+        <view class="shortcut-name">待接单</view>
+      </view>
+      <view class="shortcut-item" bindtap="goOrders" data-status="delivering">
+        <view class="shortcut-icon">🚴</view>
+        <view class="shortcut-name">配送中</view>
+      </view>
+      <view class="shortcut-item" bindtap="goOrders" data-status="completed">
+        <view class="shortcut-icon">✅</view>
+        <view class="shortcut-name">已完成</view>
+      </view>
+      <view class="shortcut-item" bindtap="goAfterSale">
+        <view class="shortcut-icon">↩️</view>
+        <view class="shortcut-name">退款/售后</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 功能菜单 -->
+  <view class="section-card">
+    <view class="menu-item" bindtap="goAddress">
+      <view class="menu-icon">📍</view>
+      <view class="menu-name">地址管理</view>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item" bindtap="goWallet">
+      <view class="menu-icon">💰</view>
+      <view class="menu-name">我的钱包</view>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item" bindtap="goCoupon">
+      <view class="menu-icon">🎫</view>
+      <view class="menu-name">优惠券</view>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item" bindtap="goReviews">
+      <view class="menu-icon">⭐</view>
+      <view class="menu-name">我的评价</view>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 角色与服务 -->
+  <view class="section-card">
+    <view class="menu-item" bindtap="goRiderApply">
+      <view class="menu-icon">🏃</view>
+      <view class="menu-name">跑腿员入驻</view>
+      <view class="menu-tag">赚外快</view>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item" bindtap="goHelp">
+      <view class="menu-icon">❓</view>
+      <view class="menu-name">帮助中心</view>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item" bindtap="goService">
+      <view class="menu-icon">🎧</view>
+      <view class="menu-name">联系客服</view>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item" bindtap="goFeedback">
+      <view class="menu-icon">📝</view>
+      <view class="menu-name">意见反馈</view>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 退出登录 -->
+  <view class="logout-btn" bindtap="logout" wx:if="{{user.loggedIn}}">退出登录</view>
+</view>

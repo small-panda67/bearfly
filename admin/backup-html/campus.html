@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>校区管理 - 校园跑腿管理后台</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="layout">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="main">
+      <div class="header" id="header"></div>
+      <div class="content">
+        <div class="search-bar">
+          <input type="text" class="search-input" placeholder="搜索校区名称">
+          <button class="btn btn-primary">+ 新增校区</button>
+        </div>
+        <div class="card">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>校区ID</th>
+                <th>校区名称</th>
+                <th>地址</th>
+                <th>宿舍楼数</th>
+                <th>用户数</th>
+                <th>跑腿员数</th>
+                <th>状态</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>C001</td><td>主校区</td><td>重庆市XX区XX路1号</td><td>12栋</td><td>1,856</td><td>98</td><td><span class="tag green">运营中</span></td><td><div class="action-group"><button class="btn-link">编辑</button><button class="btn-link">楼栋管理</button></div></td></tr>
+              <tr><td>C002</td><td>东校区</td><td>重庆市XX区XX大道88号</td><td>6栋</td><td>620</td><td>35</td><td><span class="tag green">运营中</span></td><td><div class="action-group"><button class="btn-link">编辑</button><button class="btn-link">楼栋管理</button></div></td></tr>
+              <tr><td>C003</td><td>西校区</td><td>重庆市XX区XX路99号</td><td>4栋</td><td>380</td><td>23</td><td><span class="tag orange">试运营</span></td><td><div class="action-group"><button class="btn-link">编辑</button><button class="btn-link">楼栋管理</button></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="js/app.js"></script>
+  <script>initPage('campus', '校区管理');</script>
+</body>
+</html>

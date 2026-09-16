@@ -1,0 +1,50 @@
+<!--pages/order-list/order-list.wxml 订单列表-->
+<view class="order-page">
+  <!-- 状态筛选 Tab -->
+  <view class="tab-bar">
+    <view class="tab-item {{activeTab === 'all' ? 'active' : ''}}" bindtap="switchTab" data-tab="all">全部</view>
+    <view class="tab-item {{activeTab === 'pending' ? 'active' : ''}}" bindtap="switchTab" data-tab="pending">待接单</view>
+    <view class="tab-item {{activeTab === 'delivering' ? 'active' : ''}}" bindtap="switchTab" data-tab="delivering">配送中</view>
+    <view class="tab-item {{activeTab === 'completed' ? 'active' : ''}}" bindtap="switchTab" data-tab="completed">已完成</view>
+  </view>
+
+  <!-- 订单列表 -->
+  <view class="order-list" wx:if="{{filteredOrders.length > 0}}">
+    <view class="order-card" wx:for="{{filteredOrders}}" wx:key="id" bindtap="goDetail" data-id="{{item.id}}">
+      <view class="order-header">
+        <view class="order-type">
+          <text class="type-icon">{{item.icon}}</text>
+          <text class="type-name">{{item.typeName}}</text>
+        </view>
+        <view class="order-status {{item.statusClass}}">{{item.statusText}}</view>
+      </view>
+      <view class="order-info">
+        <view class="info-row">
+          <text class="info-label">取</text>
+          <text class="info-text">{{item.pickup}}</text>
+        </view>
+        <view class="info-line"></view>
+        <view class="info-row">
+          <text class="info-label">送</text>
+          <text class="info-text">{{item.delivery}}</text>
+        </view>
+      </view>
+      <view class="order-footer">
+        <view class="order-time">{{item.time}}</view>
+        <view class="order-price">¥{{item.price}}</view>
+      </view>
+      <view class="order-actions" wx:if="{{item.actions.length > 0}}">
+        <view class="action-btn {{action.type}}" wx:for="{{item.actions}}" wx:for-item="action" wx:key="text" catchtap="handleAction" data-action="{{action.text}}" data-id="{{item.id}}">
+          {{action.text}}
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty" wx:else>
+    <view class="empty-icon">📋</view>
+    <view>暂无相关订单</view>
+    <view class="empty-btn" bindtap="goHome">去下单</view>
+  </view>
+</view>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>优惠券管理 - 校园跑腿管理后台</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="layout">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="main">
+      <div class="header" id="header"></div>
+      <div class="content">
+        <div class="search-bar">
+          <select class="search-select">
+            <option>全部状态</option>
+            <option>进行中</option>
+            <option>已结束</option>
+            <option>未开始</option>
+          </select>
+          <button class="btn btn-primary">+ 创建优惠券</button>
+        </div>
+        <div class="card">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>优惠券名称</th>
+                <th>类型</th>
+                <th>面额</th>
+                <th>使用门槛</th>
+                <th>发放数量</th>
+                <th>已领取</th>
+                <th>已使用</th>
+                <th>有效期</th>
+                <th>状态</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>新用户专享券</td><td><span class="tag blue">满减券</span></td><td>¥5</td><td>满10元</td><td>1,000</td><td>856</td><td>523</td><td>2026-08-01 ~ 2026-10-31</td><td><span class="tag green">进行中</span></td><td><div class="action-group"><button class="btn-link">详情</button><button class="btn-link danger">停用</button></div></td></tr>
+              <tr><td>快递代取券</td><td><span class="tag purple">品类券</span></td><td>¥2</td><td>满5元</td><td>500</td><td>320</td><td>180</td><td>2026-09-01 ~ 2026-09-30</td><td><span class="tag green">进行中</span></td><td><div class="action-group"><button class="btn-link">详情</button><button class="btn-link danger">停用</button></div></td></tr>
+              <tr><td>中秋特惠券</td><td><span class="tag orange">折扣券</span></td><td>8折</td><td>无门槛</td><td>200</td><td>0</td><td>0</td><td>2026-09-25 ~ 2026-09-27</td><td><span class="tag gray">未开始</span></td><td><div class="action-group"><button class="btn-link">编辑</button><button class="btn-link danger">删除</button></div></td></tr>
+              <tr><td>开学季大礼包</td><td><span class="tag blue">满减券</span></td><td>¥10</td><td>满20元</td><td>300</td><td>300</td><td>256</td><td>2026-08-20 ~ 2026-09-10</td><td><span class="tag gray">已结束</span></td><td><button class="btn-link">详情</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="js/app.js"></script>
+  <script>initPage('coupons', '优惠券管理');</script>
+</body>
+</html>

@@ -1,0 +1,162 @@
+/* pages/login/login.wxss */
+.login-page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #4A90D9 0%, #F5F6FA 40%);
+  padding: 0 40rpx;
+  box-sizing: border-box;
+}
+
+.login-header {
+  text-align: center;
+  padding: 100rpx 0 60rpx;
+}
+.logo {
+  width: 140rpx;
+  height: 140rpx;
+  background: #fff;
+  border-radius: 36rpx;
+  margin: 0 auto 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 72rpx;
+  box-shadow: 0 8rpx 32rpx rgba(0,0,0,0.1);
+}
+.app-name {
+  font-size: 44rpx;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 8rpx;
+}
+.app-slogan {
+  font-size: 26rpx;
+  color: rgba(255,255,255,0.85);
+}
+
+.login-form {
+  padding: 40rpx 32rpx;
+  margin-bottom: 30rpx;
+}
+
+/* 步骤标题 */
+.step-title {
+  margin-bottom: 30rpx;
+}
+.step-num {
+  display: block;
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+.step-desc {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 学生信息条 */
+.student-info-bar {
+  display: flex;
+  align-items: center;
+  background: #F0F7FF;
+  padding: 20rpx 24rpx;
+  border-radius: 12rpx;
+  margin-bottom: 24rpx;
+  flex-wrap: wrap;
+}
+.info-label {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #4A90D9;
+}
+.info-divider {
+  margin: 0 16rpx;
+  color: #D0D0D0;
+}
+.info-value {
+  font-size: 26rpx;
+  color: #666;
+}
+
+.form-group {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #F0F1F5;
+}
+.form-group:last-of-type { border-bottom: none; }
+.form-label {
+  width: 140rpx;
+  font-size: 28rpx;
+  color: #333;
+  flex-shrink: 0;
+}
+.form-input {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333;
+}
+.code-input { flex: 1; }
+.code-btn {
+  font-size: 24rpx;
+  color: #4A90D9;
+  padding: 8rpx 20rpx;
+  border: 1rpx solid #4A90D9;
+  border-radius: 8rpx;
+  flex-shrink: 0;
+  margin-left: 16rpx;
+}
+.code-btn.disabled {
+  color: #CCC;
+  border-color: #EEE;
+}
+
+.login-btn {
+  margin-top: 40rpx;
+  width: 100%;
+}
+.admin-btn {
+  background: #6C5CE7;
+}
+
+/* 提示文字 */
+.tip-text {
+  text-align: center;
+  font-size: 22rpx;
+  color: #BBB;
+  margin-top: 20rpx;
+  line-height: 1.6;
+}
+
+/* 返回链接 */
+.back-link {
+  text-align: center;
+  font-size: 26rpx;
+  color: #4A90D9;
+  margin-top: 30rpx;
+}
+
+.agreement {
+  display: flex;
+  align-items: center;
+  margin-top: 20rpx;
+  font-size: 22rpx;
+  color: #999;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.agree-check { transform: scale(0.8); margin-right: 4rpx; }
+.agree-text { color: #999; }
+.link { color: #4A90D9; }
+
+/* 底部入口 */
+.bottom-entry {
+  text-align: center;
+  margin-top: 50rpx;
+  padding-bottom: 40rpx;
+}
+.entry-link {
+  font-size: 26rpx;
+  color: #999;
+  text-decoration: underline;
+}

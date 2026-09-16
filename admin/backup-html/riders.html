@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>跑腿员管理 - 校园跑腿管理后台</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="layout">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="main">
+      <div class="header" id="header"></div>
+      <div class="content">
+        <div class="stats-row">
+          <div class="stat-card blue">
+            <div class="stat-label">跑腿员总数</div>
+            <div class="stat-value">156</div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-label">当前在线</div>
+            <div class="stat-value">23</div>
+          </div>
+          <div class="stat-card orange">
+            <div class="stat-label">待审核入驻</div>
+            <div class="stat-value">3</div>
+          </div>
+          <div class="stat-card purple">
+            <div class="stat-label">本月总收入</div>
+            <div class="stat-value">¥12,580</div>
+          </div>
+        </div>
+
+        <div class="search-bar">
+          <input type="text" class="search-input" placeholder="搜索姓名/手机号/骑手ID">
+          <select class="search-select">
+            <option>全部校区</option>
+            <option>主校区</option>
+            <option>东校区</option>
+            <option>西校区</option>
+          </select>
+          <select class="search-select">
+            <option>全部状态</option>
+            <option>在线</option>
+            <option>休息</option>
+            <option>离线</option>
+          </select>
+          <button class="btn btn-primary">搜索</button>
+          <button class="btn btn-outline">导出</button>
+        </div>
+
+        <div class="card">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>骑手ID</th>
+                <th>姓名</th>
+                <th>手机号</th>
+                <th>校区</th>
+                <th>等级</th>
+                <th>评分</th>
+                <th>完成单量</th>
+                <th>累计收入</th>
+                <th>状态</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="riderTable"></tbody>
+          </table>
+          <div class="pagination">
+            <span class="page-info">共 156 条</span>
+            <div class="page-btn">‹</div>
+            <div class="page-btn active">1</div>
+            <div class="page-btn">2</div>
+            <div class="page-btn">›</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="js/app.js"></script>
+  <script>
+    initPage('riders', '跑腿员管理');
+    const tbody = document.getElementById('riderTable');
+    mockData.riders.forEach(r => {
+      tbody.innerHTML += `<tr>
+        <td>${r.id}</td>
+        <td>${r.name}</td>
+        <td>${r.phone}</td>
+        <td>${r.campus}</td>
+        <td><span class="tag purple">Lv.${r.level}</span></td>
+        <td>⭐ ${r.rating}</td>
+        <td>${r.orders}</td>
+        <td>¥${r.income}</td>
+        <td>${getStatusTag(r.status)}</td>
+        <td>
+          <div class="action-group">
+            <button class="btn-link">详情</button>
+            <button class="btn-link">收入</button>
+            <button class="btn-link danger">禁用</button>
+          </div>
+        </td>
+      </tr>`;
+    });
+  </script>
+</body>
+</html>

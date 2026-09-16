@@ -1,0 +1,46 @@
+<!--pages/message/message.wxml 消息中心-->
+<view class="msg-page">
+  <!-- 消息分类入口 -->
+  <view class="msg-categories card">
+    <view class="cat-item" bindtap="goCategory" data-cat="order">
+      <view class="cat-icon order">📦</view>
+      <view class="cat-name">订单通知</view>
+      <view class="cat-badge" wx:if="{{counts.order > 0}}">{{counts.order}}</view>
+    </view>
+    <view class="cat-item" bindtap="goCategory" data-cat="system">
+      <view class="cat-icon system">📢</view>
+      <view class="cat-name">系统公告</view>
+      <view class="cat-badge" wx:if="{{counts.system > 0}}">{{counts.system}}</view>
+    </view>
+    <view class="cat-item" bindtap="goCategory" data-cat="finance">
+      <view class="cat-icon finance">💰</view>
+      <view class="cat-name">资金通知</view>
+      <view class="cat-badge" wx:if="{{counts.finance > 0}}">{{counts.finance}}</view>
+    </view>
+    <view class="cat-item" bindtap="goCategory" data-cat="service">
+      <view class="cat-icon service">🎧</view>
+      <view class="cat-name">客服消息</view>
+      <view class="cat-badge" wx:if="{{counts.service > 0}}">{{counts.service}}</view>
+    </view>
+  </view>
+
+  <!-- 消息列表 -->
+  <view class="msg-list">
+    <view class="msg-item card" wx:for="{{messages}}" wx:key="id" bindtap="readMessage" data-id="{{item.id}}">
+      <view class="msg-avatar {{item.type}}">{{item.icon}}</view>
+      <view class="msg-content">
+        <view class="msg-header">
+          <text class="msg-title">{{item.title}}</text>
+          <text class="msg-time">{{item.time}}</text>
+        </view>
+        <view class="msg-desc">{{item.desc}}</view>
+      </view>
+      <view class="msg-unread" wx:if="{{!item.read}}"></view>
+    </view>
+  </view>
+
+  <view class="empty" wx:if="{{messages.length === 0}}">
+    <view class="empty-icon">💬</view>
+    <view>暂无消息</view>
+  </view>
+</view>

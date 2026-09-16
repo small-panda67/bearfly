@@ -1,0 +1,27 @@
+/* pages/address/address.wxss */
+.address-page { padding: 20rpx 24rpx 160rpx; min-height: 100vh; }
+.address-card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+}
+.address-top { display: flex; align-items: center; margin-bottom: 12rpx; }
+.address-name { font-size: 30rpx; font-weight: 600; margin-right: 16rpx; }
+.address-phone { font-size: 26rpx; color: #666; margin-right: 12rpx; }
+.address-tag {
+  background: #4A90D9; color: #fff; font-size: 20rpx;
+  padding: 2rpx 12rpx; border-radius: 6rpx;
+}
+.address-detail { font-size: 26rpx; color: #666; line-height: 1.5; }
+.address-actions {
+  display: flex; justify-content: flex-end; gap: 32rpx;
+  margin-top: 20rpx; padding-top: 20rpx; border-top: 1rpx solid #F0F1F5;
+}
+.action-item { font-size: 24rpx; color: #666; }
+.action-item.danger { color: #E05252; }
+.add-btn {
+  position: fixed; bottom: 40rpx; left: 24rpx; right: 24rpx;
+  background: #4A90D9; color: #fff; text-align: center;
+  padding: 28rpx; border-radius: 48rpx; font-size: 30rpx; font-weight: 500;
+}

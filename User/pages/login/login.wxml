@@ -1,0 +1,96 @@
+<!--pages/login/login.wxml 登录页-->
+<view class="login-page">
+  <view class="login-header">
+    <view class="logo">🏃</view>
+    <view class="app-name">校园跑腿</view>
+    <view class="app-slogan">省时省力，校园生活好帮手</view>
+  </view>
+
+  <!-- 学生登录模式 -->
+  <view class="login-form card" wx:if="{{loginMode === 'student'}}">
+    <!-- 第一步：姓名学号验证 -->
+    <block wx:if="{{step === 1}}">
+      <view class="step-title">
+        <text class="step-num">第一步</text>
+        <text class="step-desc">请输入学校系统登记的姓名和学号</text>
+      </view>
+      <view class="form-group">
+        <view class="form-label">姓名</view>
+        <input class="form-input" placeholder="请输入真实姓名" value="{{name}}" bindinput="onNameInput" />
+      </view>
+      <view class="form-group">
+        <view class="form-label">学号</view>
+        <input class="form-input" placeholder="请输入学号" value="{{studentNo}}" bindinput="onStudentNoInput" />
+      </view>
+      <button class="btn-primary login-btn" bindtap="studentLogin" disabled="{{logging}}">
+        {{logging ? '验证中...' : '下一步'}}
+      </button>
+      <view class="tip-text">姓名和学号需与学校系统登记信息一致</view>
+    </block>
+
+    <!-- 第二步：手机号绑定验证 -->
+    <block wx:if="{{step === 2}}">
+      <view class="step-title">
+        <text class="step-num">第二步</text>
+        <text class="step-desc">请绑定入学时登记的手机号进行二次验证</text>
+      </view>
+      <view class="student-info-bar">
+        <text class="info-label">{{studentInfo.name}}</text>
+        <text class="info-divider">|</text>
+        <text class="info-value">{{studentInfo.studentNo}}</text>
+        <text class="info-divider">|</text>
+        <text class="info-value">{{studentInfo.campus}}</text>
+      </view>
+      <view class="form-group">
+        <view class="form-label">手机号</view>
+        <input class="form-input" type="number" maxlength="11" placeholder="请输入登记的手机号" value="{{phone}}" bindinput="onPhoneInput" />
+      </view>
+      <view class="form-group">
+        <view class="form-label">验证码</view>
+        <input class="form-input code-input" type="number" maxlength="6" placeholder="请输入验证码" value="{{code}}" bindinput="onCodeInput" />
+        <view class="code-btn {{countdown > 0 ? 'disabled' : ''}}" bindtap="sendCode">
+          {{countdown > 0 ? countdown + 's' : '获取验证码'}}
+        </view>
+      </view>
+      <button class="btn-primary login-btn" bindtap="bindPhone" disabled="{{logging}}">
+        {{logging ? '验证中...' : '确认绑定并登录'}}
+      </button>
+      <view class="tip-text">手机号需与学校系统登记的一致，测试验证码：123456</view>
+      <view class="back-link" bindtap="backToStep1">← 返回上一步</view>
+    </block>
+  </view>
+
+  <!-- 管理员登录模式 -->
+  <view class="login-form card" wx:if="{{loginMode === 'admin'}}">
+    <view class="step-title">
+      <text class="step-num">管理员登录</text>
+      <text class="step-desc">输入管理员账号密码进入管理后台</text>
+    </view>
+    <view class="form-group">
+      <view class="form-label">管理员账号</view>
+      <input class="form-input" placeholder="请输入管理员账号" value="{{adminUsername}}" bindinput="onAdminUsernameInput" />
+    </view>
+    <view class="form-group">
+      <view class="form-label">密码</view>
+      <input class="form-input" password placeholder="请输入密码" value="{{adminPassword}}" bindinput="onAdminPasswordInput" />
+    </view>
+    <button class="btn-primary login-btn admin-btn" bindtap="adminLogin" disabled="{{logging}}">
+      {{logging ? '登录中...' : '进入管理后台'}}
+    </button>
+    <view class="back-link" bindtap="switchToStudent">← 返回学生登录</view>
+  </view>
+
+  <!-- 协议 -->
+  <view class="agreement">
+    <checkbox class="agree-check" checked="{{agreed}}" bindtap="toggleAgree" />
+    <text class="agree-text">我已阅读并同意</text>
+    <text class="link" bindtap="showAgreement">《用户协议》</text>
+    <text class="agree-text">和</text>
+    <text class="link" bindtap="showPrivacy">《隐私政策》</text>
+  </view>
+
+  <!-- 底部切换入口 -->
+  <view class="bottom-entry">
+    <text class="entry-link" bindtap="switchToAdmin" wx:if="{{loginMode === 'student'}}">管理员登录</text>
+  </view>
+</view>

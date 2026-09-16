@@ -1,0 +1,42 @@
+/* pages/order-canteen/order-canteen.wxss */
+.canteen-page { padding: 20rpx 24rpx 160rpx; }
+.section-card { background: #fff; border-radius: 16rpx; padding: 8rpx 24rpx; margin-bottom: 20rpx; }
+.card-title { font-size: 30rpx; font-weight: 600; padding: 24rpx 0 16rpx; }
+.canteen-list { display: flex; flex-wrap: wrap; gap: 16rpx; padding-bottom: 24rpx; }
+.canteen-item {
+  width: calc(50% - 8rpx); border: 2rpx solid #E0E0E0; border-radius: 12rpx;
+  padding: 20rpx; box-sizing: border-box;
+}
+.canteen-item.active { border-color: #4A90D9; background: #F0F7FF; }
+.canteen-name { font-size: 28rpx; font-weight: 500; margin-bottom: 4rpx; }
+.canteen-desc { font-size: 22rpx; color: #999; }
+.food-input-area { padding-bottom: 24rpx; }
+.food-textarea {
+  width: 100%; min-height: 160rpx; background: #F9FAFC;
+  border-radius: 12rpx; padding: 20rpx; font-size: 26rpx;
+  box-sizing: border-box; margin-bottom: 16rpx;
+}
+.upload-btn {
+  display: inline-block; border: 2rpx dashed #DDD; color: #999;
+  font-size: 24rpx; padding: 16rpx 32rpx; border-radius: 12rpx;
+}
+.form-row { display: flex; align-items: center; padding: 28rpx 0; border-bottom: 1rpx solid #F5F6FA; }
+.form-row:last-child { border-bottom: none; }
+.row-label { width: 160rpx; font-size: 28rpx; color: #333; flex-shrink: 0; }
+.row-value { flex: 1; font-size: 28rpx; color: #333; }
+.row-value.placeholder { color: #BBB; }
+.row-input { flex: 1; font-size: 28rpx; }
+.row-arrow { color: #CCC; font-size: 32rpx; }
+.remark-row { align-items: flex-start; }
+.row-textarea { flex: 1; font-size: 28rpx; min-height: 60rpx; }
+.radio-group { display: flex; gap: 32rpx; }
+.radio-item { display: flex; align-items: center; font-size: 26rpx; color: #333; }
+.submit-bar {
+  position: fixed; bottom: 0; left: 0; right: 0; background: #fff;
+  padding: 20rpx 24rpx; display: flex; align-items: center;
+  box-shadow: 0 -4rpx 20rpx rgba(0,0,0,0.06); z-index: 100;
+}
+.submit-price { flex: 1; display: flex; flex-direction: column; }
+.submit-total { font-size: 36rpx; color: #E05252; font-weight: 700; }
+.submit-desc { font-size: 20rpx; color: #999; }
+.submit-btn { width: 280rpx; height: 80rpx; line-height: 80rpx; font-size: 30rpx; padding: 0; }

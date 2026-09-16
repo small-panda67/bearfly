@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>订单管理 - 校园跑腿管理后台</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="layout">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="main">
+      <div class="header" id="header"></div>
+      <div class="content">
+        <div class="search-bar">
+          <input type="text" class="search-input" placeholder="搜索订单号/用户/跑腿员">
+          <select class="search-select">
+            <option>全部类型</option>
+            <option>快递代取</option>
+            <option>食堂代购</option>
+            <option>商超代购</option>
+            <option>代办事务</option>
+            <option>万能跑腿</option>
+          </select>
+          <select class="search-select">
+            <option>全部状态</option>
+            <option>待接单</option>
+            <option>待取货</option>
+            <option>配送中</option>
+            <option>已完成</option>
+            <option>已取消</option>
+          </select>
+          <select class="search-select">
+            <option>全部校区</option>
+            <option>主校区</option>
+            <option>东校区</option>
+            <option>西校区</option>
+          </select>
+          <button class="btn btn-primary">搜索</button>
+          <button class="btn btn-outline">导出</button>
+        </div>
+
+        <div class="card">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>订单号</th>
+                <th>服务类型</th>
+                <th>下单用户</th>
+                <th>跑腿员</th>
+                <th>金额</th>
+                <th>状态</th>
+                <th>下单时间</th>
+                <th>完成时间</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="orderTable"></tbody>
+          </table>
+          <div class="pagination">
+            <span class="page-info">共 1,256 条</span>
+            <div class="page-btn">‹</div>
+            <div class="page-btn active">1</div>
+            <div class="page-btn">2</div>
+            <div class="page-btn">3</div>
+            <div class="page-btn">4</div>
+            <div class="page-btn">5</div>
+            <div class="page-btn">›</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="js/app.js"></script>
+  <script>
+    initPage('orders', '订单管理');
+    const tbody = document.getElementById('orderTable');
+    mockData.orders.forEach(o => {
+      tbody.innerHTML += `<tr>
+        <td>${o.id}</td>
+        <td>${o.type}</td>
+        <td>${o.user}</td>
+        <td>${o.rider}</td>
+        <td>¥${o.amount}</td>
+        <td>${getStatusTag(o.status)}</td>
+        <td>${o.createTime}</td>
+        <td>${o.finishTime}</td>
+        <td>
+          <div class="action-group">
+            <button class="btn-link">详情</button>
+            <button class="btn-link">联系</button>
+          </div>
+        </td>
+      </tr>`;
+    });
+  </script>
+</body>
+</html>

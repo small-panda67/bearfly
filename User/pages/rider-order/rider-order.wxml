@@ -1,0 +1,67 @@
+<!--pages/rider-order/rider-order.wxml 跑腿员我的订单-->
+<view class="rider-order-page">
+  <!-- 状态 Tab -->
+  <view class="tab-bar">
+    <view class="tab-item {{activeTab === 'pending' ? 'active' : ''}}" bindtap="switchTab" data-tab="pending">待取货</view>
+    <view class="tab-item {{activeTab === 'delivering' ? 'active' : ''}}" bindtap="switchTab" data-tab="delivering">配送中</view>
+    <view class="tab-item {{activeTab === 'completed' ? 'active' : ''}}" bindtap="switchTab" data-tab="completed">已完成</view>
+    <view class="tab-item {{activeTab === 'cancelled' ? 'active' : ''}}" bindtap="switchTab" data-tab="cancelled">已取消</view>
+  </view>
+
+  <!-- 订单列表 -->
+  <view class="order-list" wx:if="{{filteredOrders.length > 0}}">
+    <view class="order-card" wx:for="{{filteredOrders}}" wx:key="id">
+      <view class="order-header">
+        <view class="order-type">
+          <text class="type-icon">{{item.icon}}</text>
+          <text class="type-name">{{item.typeName}}</text>
+        </view>
+        <view class="order-status {{item.statusClass}}">{{item.statusText}}</view>
+      </view>
+
+      <view class="order-route">
+        <view class="route-row">
+          <view class="route-dot pickup"></view>
+          <view class="route-text">{{item.pickup}}</view>
+        </view>
+        <view class="route-line"></view>
+        <view class="route-row">
+          <view class="route-dot delivery"></view>
+          <view class="route-text">{{item.delivery}}</view>
+        </view>
+      </view>
+
+      <view class="order-info">
+        <view class="info-item">
+          <text class="info-label">收件人</text>
+          <text class="info-value">{{item.receiver}}</text>
+        </view>
+        <view class="info-item">
+          <text class="info-label">联系电话</text>
+          <text class="info-value">{{item.phone}}</text>
+        </view>
+        <view class="info-item" wx:if="{{item.remark}}">
+          <text class="info-label">备注</text>
+          <text class="info-value">{{item.remark}}</text>
+        </view>
+      </view>
+
+      <view class="order-footer">
+        <view class="order-price">收入 ¥{{item.price}}</view>
+        <view class="order-actions">
+          <view class="action-btn" wx:if="{{item.status === 'pending'}}" bindtap="navigatePickup" data-id="{{item.id}}">导航取货</view>
+          <view class="action-btn primary" wx:if="{{item.status === 'pending'}}" bindtap="confirmPickup" data-id="{{item.id}}">确认取货</view>
+          <view class="action-btn" wx:if="{{item.status === 'delivering'}}" bindtap="navigateDelivery" data-id="{{item.id}}">导航配送</view>
+          <view class="action-btn primary" wx:if="{{item.status === 'delivering'}}" bindtap="confirmArrive" data-id="{{item.id}}">确认送达</view>
+          <view class="action-btn" wx:if="{{item.status === 'completed'}}" bindtap="viewDetail" data-id="{{item.id}}">查看详情</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty" wx:else>
+    <view class="empty-icon">📋</view>
+    <view>暂无相关订单</view>
+    <view class="empty-btn" bindtap="goHall">去接单</view>
+  </view>
+</view>

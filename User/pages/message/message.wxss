@@ -1,0 +1,92 @@
+/* pages/message/message.wxss */
+.msg-page { padding: 20rpx 24rpx; }
+
+.msg-categories {
+  display: flex;
+  justify-content: space-around;
+  padding: 30rpx 0;
+  margin-bottom: 20rpx;
+}
+.cat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+.cat-icon {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36rpx;
+  margin-bottom: 12rpx;
+}
+.cat-icon.order { background: #E8F2FD; }
+.cat-icon.system { background: #FFF4E5; }
+.cat-icon.finance { background: #E6F7EC; }
+.cat-icon.service { background: #F3E8FD; }
+.cat-name { font-size: 24rpx; color: #333; }
+.cat-badge {
+  position: absolute;
+  top: -4rpx;
+  right: 10rpx;
+  min-width: 32rpx;
+  height: 32rpx;
+  line-height: 32rpx;
+  background: #E05252;
+  color: #fff;
+  font-size: 20rpx;
+  border-radius: 16rpx;
+  text-align: center;
+  padding: 0 8rpx;
+}
+
+.msg-list { }
+.msg-item {
+  display: flex;
+  align-items: center;
+  padding: 24rpx;
+  margin-bottom: 16rpx;
+  position: relative;
+}
+.msg-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36rpx;
+  margin-right: 20rpx;
+  flex-shrink: 0;
+}
+.msg-avatar.order { background: #E8F2FD; }
+.msg-avatar.system { background: #FFF4E5; }
+.msg-avatar.finance { background: #E6F7EC; }
+.msg-avatar.service { background: #F3E8FD; }
+.msg-content { flex: 1; overflow: hidden; }
+.msg-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8rpx;
+}
+.msg-title { font-size: 28rpx; font-weight: 500; color: #333; }
+.msg-time { font-size: 22rpx; color: #999; flex-shrink: 0; margin-left: 16rpx; }
+.msg-desc {
+  font-size: 24rpx;
+  color: #999;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.msg-unread {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+  background: #E05252;
+  margin-left: 16rpx;
+  flex-shrink: 0;
+}
