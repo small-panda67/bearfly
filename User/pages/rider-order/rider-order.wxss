@@ -49,6 +49,7 @@
 .order-status { font-size: 24rpx; padding: 4rpx 16rpx; border-radius: 8rpx; }
 .order-status.pending { background: #FFF4E5; color: #E89B3C; }
 .order-status.delivering { background: #E8F2FD; color: #4A90D9; }
+.order-status.delivered { background: #FFF4E5; color: #E89B3C; }
 .order-status.completed { background: #E6F7EC; color: #2BA471; }
 .order-status.cancelled { background: #F0F1F5; color: #999; }
 

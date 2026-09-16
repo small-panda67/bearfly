@@ -5,6 +5,7 @@
     <view class="tab-item {{activeTab === 'all' ? 'active' : ''}}" bindtap="switchTab" data-tab="all">全部</view>
     <view class="tab-item {{activeTab === 'pending' ? 'active' : ''}}" bindtap="switchTab" data-tab="pending">待接单</view>
     <view class="tab-item {{activeTab === 'delivering' ? 'active' : ''}}" bindtap="switchTab" data-tab="delivering">配送中</view>
+    <view class="tab-item {{activeTab === 'delivered' ? 'active' : ''}}" bindtap="switchTab" data-tab="delivered">待确认</view>
     <view class="tab-item {{activeTab === 'completed' ? 'active' : ''}}" bindtap="switchTab" data-tab="completed">已完成</view>
   </view>
 

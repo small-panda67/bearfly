@@ -29,7 +29,7 @@ const mysql = require('mysql2/promise');
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
       PRIMARY KEY (id),
-      KEY idx_type (type)
+      UNIQUE KEY idx_type (type)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='定价配置表'
   `);
 

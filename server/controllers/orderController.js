@@ -1,6 +1,12 @@
 // server/controllers/orderController.js - 订单控制器
 const { pool } = require('../config/db');
 
+const ORDER_TYPES = ['express', 'canteen', 'supermarket', 'errand', 'other'];
+
+function roundMoney(value) {
+  return Math.round((Number(value) + Number.EPSILON) * 100) / 100;
+}
+
 // 写订单轨迹（在给定连接上执行，兼容普通 pool.query）
 async function writeTrack(conn, orderId, status, description, operatorType, operatorId) {
   await conn.query(
@@ -16,15 +22,41 @@ exports.create = async (req, res) => {
     await connection.beginTransaction();
     const { type, campus, pickup_address, delivery_address, pickup_name, delivery_name, pickup_phone, delivery_phone, amount, tip, insurance, remark, item_desc, item_size } = req.body;
 
+    if (!ORDER_TYPES.includes(type)) {
+      await connection.rollback();
+      return res.status(400).json({ code: 400, message: '服务类型不正确' });
+    }
+    if (!pickup_address || !delivery_address) {
+      await connection.rollback();
+      return res.status(400).json({ code: 400, message: '取货地址和送达地址不能为空' });
+    }
+    if (!pickup_phone || !delivery_phone) {
+      await connection.rollback();
+      return res.status(400).json({ code: 400, message: '联系手机号不能为空' });
+    }
+
+    const amountValue = roundMoney(amount);
+    const tipValue = roundMoney(tip || 0);
+    const insuranceValue = roundMoney(insurance || 0);
+    if (!Number.isFinite(amountValue) || amountValue <= 0 || amountValue > 10000) {
+      await connection.rollback();
+      return res.status(400).json({ code: 400, message: '订单金额不正确' });
+    }
+    if (tipValue < 0 || insuranceValue < 0) {
+      await connection.rollback();
+      return res.status(400).json({ code: 400, message: '小费和保价费不能为负数' });
+    }
+
+    const payAmount = roundMoney(amountValue + tipValue + insuranceValue);
     // 生成订单号
     const orderNo = 'OD' + Date.now() + Math.floor(Math.random() * 1000);
 
     const [result] = await connection.query(
       `INSERT INTO orders (order_no, user_id, type, campus, pickup_address, delivery_address,
        pickup_name, delivery_name, pickup_phone, delivery_phone, amount, tip, insurance,
-       remark, item_desc, item_size, status, created_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "pending", NOW())`,
-      [orderNo, req.user.id, type, campus, pickup_address, delivery_address, pickup_name, delivery_name, pickup_phone, delivery_phone, amount, tip || 0, insurance || 0, remark, item_desc, item_size]
+       pay_amount, remark, item_desc, item_size, status, created_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "pending", NOW())`,
+      [orderNo, req.user.id, type, campus, pickup_address, delivery_address, pickup_name, delivery_name, pickup_phone, delivery_phone, amountValue, tipValue, insuranceValue, payAmount, remark, item_desc, item_size]
     );
 
     await writeTrack(connection, result.insertId, 'created', '订单已创建', 'user', req.user.id);
@@ -62,9 +94,16 @@ exports.getDetail = async (req, res) => {
       [req.params.id]
     );
     if (!orders[0]) return res.status(404).json({ code: 404, message: '订单不存在' });
+    const order = orders[0];
+    const canView = req.user.role === 'admin'
+      || order.user_id === req.user.id
+      || order.rider_id === req.user.id;
+    if (!canView) {
+      return res.status(403).json({ code: 403, message: '无权查看该订单' });
+    }
     // 订单轨迹
     const [tracks] = await pool.query('SELECT * FROM order_tracks WHERE order_id = ? ORDER BY created_at ASC', [req.params.id]);
-    res.json({ code: 0, data: { ...orders[0], tracks } });
+    res.json({ code: 0, data: { ...order, tracks } });
   } catch (err) {
     res.status(500).json({ code: 500, message: '获取失败', error: err.message });
   }
@@ -77,9 +116,9 @@ exports.cancel = async (req, res) => {
     await connection.beginTransaction();
     const [orders] = await connection.query('SELECT * FROM orders WHERE id = ? AND user_id = ? FOR UPDATE', [req.params.id, req.user.id]);
     if (!orders[0]) { await connection.rollback(); return res.status(404).json({ code: 404, message: '订单不存在' }); }
-    if (!['pending', 'picked'].includes(orders[0].status)) {
+    if (orders[0].status !== 'pending') {
       await connection.rollback();
-      return res.status(400).json({ code: 400, message: '当前状态不可取消' });
+      return res.status(400).json({ code: 400, message: '订单已被接单，当前状态不可取消' });
     }
     await connection.query('UPDATE orders SET status = "cancelled", cancelled_at = NOW(), cancel_reason = ? WHERE id = ?', [req.body.reason || '用户取消', req.params.id]);
     await writeTrack(connection, req.params.id, 'cancelled', '订单已取消：' + (req.body.reason || '用户取消'), 'user', req.user.id);
@@ -101,11 +140,53 @@ exports.confirm = async (req, res) => {
     const [orders] = await connection.query('SELECT * FROM orders WHERE id = ? FOR UPDATE', [req.params.id]);
     if (!orders[0]) { await connection.rollback(); return res.status(404).json({ code: 404, message: '订单不存在' }); }
     if (orders[0].user_id !== req.user.id) { await connection.rollback(); return res.status(403).json({ code: 403, message: '无权操作该订单' }); }
-    if (orders[0].status !== 'delivering') {
+    if (orders[0].status !== 'delivered') {
       await connection.rollback();
-      return res.status(400).json({ code: 400, message: '订单当前状态不可确认收货' });
+      return res.status(400).json({ code: 400, message: '跑腿员尚未确认送达，暂不能确认收货' });
     }
-    await connection.query('UPDATE orders SET status = "completed", confirmed_at = NOW() WHERE id = ?', [req.params.id]);
+
+    const order = orders[0];
+    const income = roundMoney(Number(order.amount || 0) + Number(order.tip || 0));
+    if (order.rider_id) {
+      await connection.query(
+        `INSERT INTO wallets (user_id, balance, total_income, created_at)
+         VALUES (?, ?, ?, NOW())
+         ON DUPLICATE KEY UPDATE
+           balance = balance + VALUES(balance),
+           total_income = total_income + VALUES(total_income),
+           updated_at = NOW()`,
+        [order.rider_id, income, income]
+      );
+      const [wallets] = await connection.query(
+        'SELECT balance FROM wallets WHERE user_id = ?',
+        [order.rider_id]
+      );
+      const balanceAfter = wallets[0] ? wallets[0].balance : income;
+      await connection.query(
+        `INSERT INTO wallet_records
+         (user_id, type, amount, balance_after, source, ref_id, description, created_at)
+         VALUES (?, 'income', ?, ?, 'order', ?, '订单配送收入', NOW())`,
+        [order.rider_id, income, balanceAfter, order.id]
+      );
+      await connection.query(
+        `UPDATE riders
+         SET total_orders = total_orders + 1,
+             total_income = total_income + ?,
+             updated_at = NOW()
+         WHERE user_id = ?`,
+        [income, order.rider_id]
+      );
+    }
+
+    await connection.query(
+      `UPDATE orders
+       SET status = "completed",
+           pay_status = "paid",
+           pay_time = COALESCE(pay_time, NOW()),
+           confirmed_at = NOW()
+       WHERE id = ?`,
+      [req.params.id]
+    );
     await writeTrack(connection, req.params.id, 'confirmed', '用户已确认收货', 'user', req.user.id);
     await connection.commit();
     res.json({ code: 0, message: '确认成功' });
@@ -119,21 +200,51 @@ exports.confirm = async (req, res) => {
 
 // 评价
 exports.rate = async (req, res) => {
+  const connection = await pool.getConnection();
   try {
     const { rating, content } = req.body;
     if (!rating || rating < 1 || rating > 5) return res.status(400).json({ code: 400, message: '评分必须在1-5之间' });
-    const [orders] = await pool.query('SELECT * FROM orders WHERE id = ? AND user_id = ?', [req.params.id, req.user.id]);
-    if (!orders[0]) return res.status(404).json({ code: 404, message: '订单不存在' });
-    if (orders[0].status !== 'completed') return res.status(400).json({ code: 400, message: '订单未完成，无法评价' });
-    if (orders[0].rated) return res.status(400).json({ code: 400, message: '该订单已评价' });
-    await pool.query(
-      'INSERT INTO order_ratings (order_id, user_id, rating, content, created_at) VALUES (?, ?, ?, ?, NOW())',
-      [req.params.id, req.user.id, rating, content || '']
+    await connection.beginTransaction();
+    const [orders] = await connection.query('SELECT * FROM orders WHERE id = ? AND user_id = ? FOR UPDATE', [req.params.id, req.user.id]);
+    if (!orders[0]) {
+      await connection.rollback();
+      return res.status(404).json({ code: 404, message: '订单不存在' });
+    }
+    if (orders[0].status !== 'completed') {
+      await connection.rollback();
+      return res.status(400).json({ code: 400, message: '订单未完成，无法评价' });
+    }
+    if (orders[0].rated) {
+      await connection.rollback();
+      return res.status(400).json({ code: 400, message: '该订单已评价' });
+    }
+    await connection.query(
+      'INSERT INTO order_ratings (order_id, user_id, rider_id, rating, content, created_at) VALUES (?, ?, ?, ?, ?, NOW())',
+      [req.params.id, req.user.id, orders[0].rider_id || null, rating, content || '']
     );
-    await pool.query('UPDATE orders SET rated = 1 WHERE id = ?', [req.params.id]);
+    await connection.query('UPDATE orders SET rated = 1 WHERE id = ?', [req.params.id]);
+    if (orders[0].rider_id) {
+      const [[ratingSummary]] = await connection.query(
+        `SELECT AVG(r.rating) AS average_rating
+         FROM order_ratings r
+         JOIN orders o ON o.id = r.order_id
+         WHERE o.rider_id = ?`,
+        [orders[0].rider_id]
+      );
+      if (ratingSummary && ratingSummary.average_rating != null) {
+        await connection.query(
+          'UPDATE riders SET rating = ?, updated_at = NOW() WHERE user_id = ?',
+          [Number(ratingSummary.average_rating).toFixed(1), orders[0].rider_id]
+        );
+      }
+    }
+    await connection.commit();
     res.json({ code: 0, message: '评价成功' });
   } catch (err) {
+    await connection.rollback();
     res.status(500).json({ code: 500, message: '评价失败', error: err.message });
+  } finally {
+    connection.release();
   }
 };
 

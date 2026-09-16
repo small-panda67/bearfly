@@ -17,6 +17,7 @@
           <el-option label="待接单" value="pending" />
           <el-option label="待取货" value="picked" />
           <el-option label="配送中" value="delivering" />
+          <el-option label="待确认" value="delivered" />
           <el-option label="已完成" value="completed" />
           <el-option label="已取消" value="cancelled" />
         </el-select>
@@ -117,11 +118,11 @@ const typeMap = {
 }
 const statusMap = {
   pending: '待接单', picked: '待取货', delivering: '配送中',
-  completed: '已完成', cancelled: '已取消'
+  delivered: '待确认', completed: '已完成', cancelled: '已取消'
 }
 const statusTypeMap = {
   pending: 'warning', picked: 'primary', delivering: 'primary',
-  completed: 'success', cancelled: 'info'
+  delivered: 'warning', completed: 'success', cancelled: 'info'
 }
 
 async function loadData() {

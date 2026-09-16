@@ -85,7 +85,13 @@
 
   <!-- 角色与服务 -->
   <view class="section-card">
-    <view class="menu-item" bindtap="goRiderApply">
+    <view class="menu-item" wx:if="{{user.role === 'rider'}}" bindtap="goRiderCenter">
+      <view class="menu-icon">🏃</view>
+      <view class="menu-name">进入跑腿员中心</view>
+      <view class="menu-tag">接单赚钱</view>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item" wx:if="{{user.role !== 'rider'}}" bindtap="goRiderApply">
       <view class="menu-icon">🏃</view>
       <view class="menu-name">跑腿员入驻</view>
       <view class="menu-tag">赚外快</view>

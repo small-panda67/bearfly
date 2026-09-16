@@ -37,17 +37,17 @@
       <view class="size-option {{size === 'small' ? 'active' : ''}}" bindtap="selectSize" data-size="small">
         <view class="size-name">小件</view>
         <view class="size-desc">文件/小包裹</view>
-        <view class="size-price">¥2</view>
+        <view class="size-price">¥{{priceMap.small}}</view>
       </view>
       <view class="size-option {{size === 'medium' ? 'active' : ''}}" bindtap="selectSize" data-size="medium">
         <view class="size-name">中件</view>
         <view class="size-desc">常规包裹</view>
-        <view class="size-price">¥4</view>
+        <view class="size-price">¥{{priceMap.medium}}</view>
       </view>
       <view class="size-option {{size === 'large' ? 'active' : ''}}" bindtap="selectSize" data-size="large">
         <view class="size-name">大件</view>
         <view class="size-desc">行李箱/重物</view>
-        <view class="size-price">¥6</view>
+        <view class="size-price">¥{{priceMap.large}}</view>
       </view>
     </view>
   </view>

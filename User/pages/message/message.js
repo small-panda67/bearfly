@@ -2,7 +2,7 @@
 const app = getApp();
 
 const typeIconMap = { express: '📦', canteen: '🍜', supermarket: '🛒', errand: '📋', other: '🚀' };
-const statusTextMap = { pending: '待接单', picked: '待取货', delivering: '配送中', completed: '已完成', cancelled: '已取消' };
+const statusTextMap = { pending: '待接单', picked: '待取货', delivering: '配送中', delivered: '待确认', completed: '已完成', cancelled: '已取消' };
 
 Page({
   data: {

@@ -6,6 +6,7 @@ const typeNameMap = { express: '快递代取', canteen: '食堂代购', supermar
 const riderStatusMap = {
   picked: { tab: 'pending', text: '待取货' },
   delivering: { tab: 'delivering', text: '配送中' },
+  delivered: { tab: 'delivered', text: '待确认' },
   completed: { tab: 'completed', text: '已完成' },
   cancelled: { tab: 'cancelled', text: '已取消' }
 };
@@ -101,7 +102,7 @@ Page({
         app.request({ url: '/riders/orders/' + id + '/deliver', method: 'POST' })
           .then((data) => {
             wx.showToast({
-              title: data && data.income ? '送达成功，收入 ¥' + data.income : '送达成功，收入已入账',
+              title: '已送达，等待用户确认',
               icon: 'success'
             });
             this.loadOrders();
@@ -121,8 +122,8 @@ Page({
     }
   },
 
-  viewDetail() {
-    wx.showToast({ title: '订单详情开发中', icon: 'none' });
+  viewDetail(e) {
+    wx.navigateTo({ url: '/pages/order-detail/order-detail?id=' + e.currentTarget.dataset.id });
   },
 
   goHall() {

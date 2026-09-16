@@ -1,10 +1,13 @@
 // app.js - 校园跑腿小程序全局入口
+const serverConfig = require('./config/index');
+
 App({
   globalData: {
     userInfo: null,
     token: '',
     role: 'user', // user / rider / admin
-    baseUrl: 'http://localhost:3000/api',
+    baseUrl: serverConfig.serverHost + serverConfig.apiPrefix,
+    redirectingToLogin: false,
     campus: {
       id: 1,
       name: '主校区'
@@ -40,6 +43,7 @@ App({
         url: this.globalData.baseUrl + url,
         method,
         data,
+        timeout: 15000,
         header: {
           'Content-Type': 'application/json',
           'Authorization': this.globalData.token ? 'Bearer ' + this.globalData.token : '',
@@ -48,7 +52,20 @@ App({
         success: (res) => {
           if (res.statusCode === 401) {
             wx.removeStorageSync('token');
-            wx.redirectTo({ url: '/pages/login/login' });
+            wx.removeStorageSync('userInfo');
+            wx.removeStorageSync('role');
+            this.globalData.token = '';
+            this.globalData.userInfo = null;
+            this.globalData.role = 'user';
+            if (!this.globalData.redirectingToLogin) {
+              this.globalData.redirectingToLogin = true;
+              wx.reLaunch({
+                url: '/pages/login/login',
+                complete: () => {
+                  this.globalData.redirectingToLogin = false;
+                }
+              });
+            }
             reject(new Error('未登录'));
             return;
           }
@@ -60,7 +77,10 @@ App({
           }
         },
         fail: (err) => {
-          wx.showToast({ title: '网络异常', icon: 'none' });
+          wx.showToast({
+            title: err.errMsg && err.errMsg.includes('timeout') ? '请求超时' : '网络异常',
+            icon: 'none'
+          });
           reject(err);
         }
       });

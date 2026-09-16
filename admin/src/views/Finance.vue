@@ -5,25 +5,25 @@
       <el-col :span="6">
         <div class="stat-card blue">
           <div class="stat-label">今日交易额</div>
-          <div class="stat-value">¥0</div>
+          <div class="stat-value">¥{{ summary.todayGmv }}</div>
         </div>
       </el-col>
       <el-col :span="6">
         <div class="stat-card green">
           <div class="stat-label">平台收入(10%)</div>
-          <div class="stat-value">¥0</div>
+          <div class="stat-value">¥{{ summary.platformIncome }}</div>
         </div>
       </el-col>
       <el-col :span="6">
         <div class="stat-card orange">
           <div class="stat-label">待审核提现</div>
-          <div class="stat-value">{{ pendingCount }}笔</div>
+          <div class="stat-value">{{ summary.pendingWithdrawals }}笔</div>
         </div>
       </el-col>
       <el-col :span="6">
         <div class="stat-card purple">
           <div class="stat-label">本月交易额</div>
-          <div class="stat-value">¥0</div>
+          <div class="stat-value">¥{{ summary.monthGmv }}</div>
         </div>
       </el-col>
     </el-row>
@@ -34,7 +34,7 @@
         <span class="card-title">提现审核</span>
         <el-button type="success" size="small" @click="batchApprove">批量通过</el-button>
       </div>
-      <el-table :data="withdrawals" v-loading="loading" border stripe style="width: 100%">
+        <el-table :data="withdrawals" v-loading="loading" border stripe style="width: 100%" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="50" />
         <el-table-column prop="id" label="申请编号" width="100" />
         <el-table-column prop="rider_name" label="跑腿员" width="100" />
@@ -92,19 +92,47 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { getWithdrawalList, auditWithdrawal as auditApi, getTransactionList } from '@/api/finance'
+import { ref, reactive, computed, onMounted } from 'vue'
+import {
+  getFinanceSummary,
+  getWithdrawalList,
+  auditWithdrawal as auditApi,
+  batchAuditWithdrawals,
+  getTransactionList
+} from '@/api/finance'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
 const loading = ref(false)
 const txLoading = ref(false)
 const withdrawals = ref([])
 const transactions = ref([])
+const selectedWithdrawals = ref([])
+const summary = reactive({
+  todayGmv: 0,
+  platformIncome: 0,
+  pendingWithdrawals: 0,
+  monthGmv: 0
+})
 
 const statusMap = { pending: '待审核', approved: '已通过', rejected: '已拒绝', paid: '已打款', failed: '失败' }
 const statusTypeMap = { pending: 'warning', approved: 'success', rejected: 'danger', paid: 'primary', failed: 'info' }
 
 const pendingCount = computed(() => withdrawals.value.filter(w => w.status === 'pending').length)
+
+async function loadSummary() {
+  try {
+    const res = await getFinanceSummary()
+    if (res.code === 0 && res.data) {
+      Object.assign(summary, res.data)
+    }
+  } catch (err) {
+    // 错误已在拦截器处理
+  }
+}
+
+function handleSelectionChange(rows) {
+  selectedWithdrawals.value = rows.filter(row => row.status === 'pending')
+}
 
 async function loadWithdrawals() {
   loading.value = true
@@ -144,11 +172,30 @@ function auditWithdraw(row, type) {
     .catch(() => {})
 }
 
-function batchApprove() {
-  ElMessage.success('批量通过功能开发中')
+async function batchApprove() {
+  if (!selectedWithdrawals.value.length) {
+    ElMessage.warning('请选择待审核的提现记录')
+    return
+  }
+  try {
+    await ElMessageBox.confirm(`确定批量通过 ${selectedWithdrawals.value.length} 条提现申请？`, '提示', { type: 'warning' })
+    await batchAuditWithdrawals({
+      ids: selectedWithdrawals.value.map(item => item.id),
+      status: 'approved',
+      reason: '批量审核通过'
+    })
+    ElMessage.success('批量审核完成')
+    loadWithdrawals()
+    loadSummary()
+  } catch (err) {
+    if (err !== 'cancel') {
+      // 错误已在拦截器处理
+    }
+  }
 }
 
 onMounted(() => {
+  loadSummary()
   loadWithdrawals()
   loadTransactions()
 })

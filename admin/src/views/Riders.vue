@@ -69,7 +69,7 @@
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
-import { getRiderList } from '@/api/riders'
+import { getRiderList, updateRiderStatus } from '@/api/riders'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
 const loading = ref(false)
@@ -115,7 +115,15 @@ function viewIncome(row) {
 
 function disableRider(row) {
   ElMessageBox.confirm(`确定禁用跑腿员 ${row.name}？禁用后将无法接单。`, '提示', { type: 'warning' })
-    .then(() => ElMessage.success('已禁用'))
+    .then(async () => {
+      try {
+        await updateRiderStatus(row.id, 'disabled')
+        ElMessage.success('已禁用')
+        loadData()
+      } catch (err) {
+        // 错误已在拦截器处理
+      }
+    })
     .catch(() => {})
 }
 

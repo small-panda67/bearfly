@@ -167,7 +167,7 @@ Page({
               pickup_phone: this.data.receiverPhone,
               delivery_name: this.data.receiverName,
               delivery_phone: this.data.receiverPhone,
-              amount: this.data.totalPrice,
+              amount: this.data.baseFee + this.data.distanceFee,
               tip: this.data.tip,
               insurance: this.data.insured ? 1 : 0,
               remark: this.data.remark,
@@ -179,7 +179,7 @@ Page({
           this.setData({ submitting: false });
           wx.showToast({ title: '下单成功', icon: 'success' });
           setTimeout(() => {
-            wx.redirectTo({ url: '/pages/order-list/order-list' });
+            wx.switchTab({ url: '/pages/order-list/order-list' });
           }, 1000);
         } catch (err) {
           wx.hideLoading();

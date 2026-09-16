@@ -20,6 +20,7 @@ router.get('/users', adminAuth, adminController.getUsers);
 router.put('/users/:id/status', adminAuth, adminController.updateUserStatus);
 // 跑腿员管理
 router.get('/riders', adminAuth, adminController.getRiders);
+router.put('/riders/:id/status', adminAuth, adminController.updateRiderStatus);
 router.get('/rider-applications', adminAuth, adminController.getRiderApplications);
 router.put('/rider-applications/:id/audit', adminAuth, adminController.auditRiderApplication);
 // 订单管理
@@ -28,5 +29,7 @@ router.get('/orders/:id', adminAuth, adminController.getOrderDetail);
 // 投诉管理
 router.get('/complaints', adminAuth, adminController.getComplaints);
 router.put('/complaints/:id/handle', adminAuth, adminController.handleComplaint);
+// 管理员账号
+router.put('/password', adminAuth, adminController.updateAdminPassword);
 
 module.exports = router;

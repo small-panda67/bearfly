@@ -6,6 +6,7 @@ const statusDescMap = {
   pending: '订单已提交，等待跑腿员接单',
   picked: '跑腿员已接单，等待取货',
   delivering: '跑腿员正在配送中，请耐心等待',
+  delivered: '跑腿员已送达，请确认收货',
   completed: '订单已完成，感谢使用',
   cancelled: '订单已取消'
 };
@@ -56,12 +57,15 @@ Page({
     if (status === 'pending') progress = 1;
     else if (status === 'picked') progress = 2;
     else if (status === 'delivering') progress = o.delivered_at ? 4 : 3;
+    else if (status === 'delivered') progress = 4;
     else if (status === 'completed') progress = 4;
 
     let actions = [];
     if (status === 'pending') {
       actions = [{ text: '取消订单', type: 'danger' }];
     } else if (status === 'picked' || status === 'delivering') {
+      actions = [{ text: '联系骑手', type: '' }];
+    } else if (status === 'delivered') {
       actions = [{ text: '联系骑手', type: '' }, { text: '确认收货', type: 'primary' }];
     } else if (status === 'completed' && !o.rated) {
       actions = [{ text: '评价', type: 'primary' }];
@@ -84,14 +88,14 @@ Page({
         id: o.order_no || String(o.id),
         typeName: typeNameMap[o.type] || o.type,
         status,
-        statusText: { pending: '待接单', picked: '待取货', delivering: '配送中', completed: '已完成', cancelled: '已取消' }[status] || status,
+        statusText: { pending: '待接单', picked: '待取货', delivering: '配送中', delivered: '待确认', completed: '已完成', cancelled: '已取消' }[status] || status,
         statusDesc: statusDescMap[status] || '',
         progress,
         pickup: o.pickup_address || '',
         delivery: o.delivery_address || '',
         remark: o.remark || '',
         createTime: o.created_at ? String(o.created_at).replace('T', ' ').substring(0, 19) : '',
-        totalPrice: o.amount || '0.00',
+        totalPrice: o.pay_amount || o.amount || '0.00',
         rider: o.rider_name ? {
           name: o.rider_name, avatar: '🏃', rating: '5.0', orders: 0
         } : null,

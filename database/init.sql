@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `openid` VARCHAR(64) DEFAULT NULL COMMENT '微信openid',
   `unionid` VARCHAR(64) DEFAULT NULL COMMENT '微信unionid',
   `phone` VARCHAR(20) DEFAULT NULL COMMENT '手机号',
+  `student_no` VARCHAR(30) DEFAULT NULL COMMENT '关联学号',
   `nickname` VARCHAR(50) DEFAULT NULL COMMENT '昵称',
   `avatar` VARCHAR(255) DEFAULT NULL COMMENT '头像URL',
   `gender` TINYINT DEFAULT 0 COMMENT '性别 0未知 1男 2女',
@@ -29,12 +30,35 @@ CREATE TABLE IF NOT EXISTS `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_openid` (`openid`),
   UNIQUE KEY `idx_phone` (`phone`),
+  UNIQUE KEY `idx_student_no` (`student_no`),
   KEY `idx_campus` (`campus`),
   KEY `idx_status` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
 
 -- ============================================================
--- 2. 管理员表
+-- 2. 学校学生信息表
+-- ============================================================
+CREATE TABLE IF NOT EXISTS `students` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `name` VARCHAR(50) NOT NULL COMMENT '学生姓名',
+  `student_no` VARCHAR(30) NOT NULL COMMENT '学号',
+  `phone` VARCHAR(20) NOT NULL COMMENT '绑定手机号',
+  `campus` VARCHAR(50) DEFAULT NULL COMMENT '所属校区',
+  `college` VARCHAR(100) DEFAULT NULL COMMENT '学院',
+  `major` VARCHAR(100) DEFAULT NULL COMMENT '专业',
+  `grade` VARCHAR(20) DEFAULT NULL COMMENT '年级',
+  `status` VARCHAR(20) DEFAULT 'active' COMMENT '状态 active/graduated/frozen',
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `idx_student_no` (`student_no`),
+  UNIQUE KEY `idx_student_phone` (`phone`),
+  KEY `idx_name` (`name`),
+  KEY `idx_campus` (`campus`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='学校学生信息表';
+
+-- ============================================================
+-- 3. 管理员表
 -- ============================================================
 CREATE TABLE IF NOT EXISTS `admins` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '管理员ID',
@@ -51,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `admins` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='管理员表';
 
 -- ============================================================
--- 3. 跑腿员表
+-- 4. 跑腿员表
 -- ============================================================
 CREATE TABLE IF NOT EXISTS `riders` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '跑腿员ID',
@@ -78,7 +102,7 @@ CREATE TABLE IF NOT EXISTS `riders` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='跑腿员表';
 
 -- ============================================================
--- 4. 跑腿员入驻申请表
+-- 5. 跑腿员入驻申请表
 -- ============================================================
 CREATE TABLE IF NOT EXISTS `rider_applications` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '申请ID',
@@ -98,7 +122,7 @@ CREATE TABLE IF NOT EXISTS `rider_applications` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='跑腿员入驻申请表';
 
 -- ============================================================
--- 5. 地址表
+-- 6. 地址表
 -- ============================================================
 CREATE TABLE IF NOT EXISTS `addresses` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '地址ID',
@@ -116,7 +140,7 @@ CREATE TABLE IF NOT EXISTS `addresses` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='收货地址表';
 
 -- ============================================================
--- 6. 订单表
+-- 7. 订单表
 -- ============================================================
 CREATE TABLE IF NOT EXISTS `orders` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '订单ID',
@@ -141,7 +165,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `pay_amount` DECIMAL(10,2) DEFAULT 0.00 COMMENT '实付金额',
   `pay_status` VARCHAR(20) DEFAULT 'unpaid' COMMENT '支付状态 unpaid/paid/refunded',
   `pay_time` DATETIME DEFAULT NULL COMMENT '支付时间',
-  `status` VARCHAR(20) DEFAULT 'pending' COMMENT '订单状态 pending/picked/delivering/completed/cancelled',
+  `status` VARCHAR(20) DEFAULT 'pending' COMMENT '订单状态 pending/picked/delivering/delivered/completed/cancelled',
   `remark` VARCHAR(500) DEFAULT NULL COMMENT '备注',
   `cancel_reason` VARCHAR(255) DEFAULT NULL COMMENT '取消原因',
   `picked_at` DATETIME DEFAULT NULL COMMENT '取货时间',
@@ -163,7 +187,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单表';
 
 -- ============================================================
--- 7. 订单轨迹表
+-- 8. 订单轨迹表
 -- ============================================================
 CREATE TABLE IF NOT EXISTS `order_tracks` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '轨迹ID',
@@ -178,7 +202,7 @@ CREATE TABLE IF NOT EXISTS `order_tracks` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单轨迹表';
 
 -- ============================================================
--- 8. 订单评价表
+-- 9. 订单评价表
 -- ============================================================
 CREATE TABLE IF NOT EXISTS `order_ratings` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '评价ID',
@@ -195,7 +219,7 @@ CREATE TABLE IF NOT EXISTS `order_ratings` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单评价表';
 
 -- ============================================================
--- 9. 钱包表
+-- 10. 钱包表
 -- ============================================================
 CREATE TABLE IF NOT EXISTS `wallets` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '钱包ID',
@@ -211,7 +235,7 @@ CREATE TABLE IF NOT EXISTS `wallets` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='钱包表';
 
 -- ============================================================
--- 10. 钱包流水表
+-- 11. 钱包流水表
 -- ============================================================
 CREATE TABLE IF NOT EXISTS `wallet_records` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '流水ID',
@@ -230,7 +254,7 @@ CREATE TABLE IF NOT EXISTS `wallet_records` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='钱包流水表';
 
 -- ============================================================
--- 11. 提现表
+-- 12. 提现表
 -- ============================================================
 CREATE TABLE IF NOT EXISTS `withdrawals` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '提现ID',
@@ -251,7 +275,7 @@ CREATE TABLE IF NOT EXISTS `withdrawals` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='提现申请表';
 
 -- ============================================================
--- 12. 优惠券表
+-- 13. 优惠券表
 -- ============================================================
 CREATE TABLE IF NOT EXISTS `coupons` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '优惠券ID',
@@ -271,7 +295,7 @@ CREATE TABLE IF NOT EXISTS `coupons` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='优惠券表';
 
 -- ============================================================
--- 13. 用户优惠券表
+-- 14. 用户优惠券表
 -- ============================================================
 CREATE TABLE IF NOT EXISTS `user_coupons` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ID',
@@ -288,7 +312,7 @@ CREATE TABLE IF NOT EXISTS `user_coupons` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户优惠券表';
 
 -- ============================================================
--- 14. 公告表
+-- 15. 公告表
 -- ============================================================
 CREATE TABLE IF NOT EXISTS `notices` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '公告ID',
@@ -307,7 +331,7 @@ CREATE TABLE IF NOT EXISTS `notices` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='公告表';
 
 -- ============================================================
--- 15. 校区表
+-- 16. 校区表
 -- ============================================================
 CREATE TABLE IF NOT EXISTS `campuses` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '校区ID',
@@ -322,7 +346,7 @@ CREATE TABLE IF NOT EXISTS `campuses` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='校区表';
 
 -- ============================================================
--- 16. 投诉表
+-- 17. 投诉表
 -- ============================================================
 CREATE TABLE IF NOT EXISTS `complaints` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '投诉ID',
@@ -344,7 +368,7 @@ CREATE TABLE IF NOT EXISTS `complaints` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='投诉表';
 
 -- ============================================================
--- 17. 消息表
+-- 18. 消息表
 -- ============================================================
 CREATE TABLE IF NOT EXISTS `messages` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '消息ID',
@@ -361,28 +385,113 @@ CREATE TABLE IF NOT EXISTS `messages` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='消息表';
 
 -- ============================================================
+-- 19. 定价配置表
+-- ============================================================
+CREATE TABLE IF NOT EXISTS `pricing_configs` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '配置ID',
+  `type` VARCHAR(30) NOT NULL COMMENT '服务类型 express/canteen/supermarket/errand/other',
+  `name` VARCHAR(50) NOT NULL COMMENT '名称',
+  `base_price` DECIMAL(10,2) NOT NULL DEFAULT 0.00 COMMENT '基础价',
+  `per_km` DECIMAL(10,2) NOT NULL DEFAULT 0.00 COMMENT '每公里加价',
+  `description` VARCHAR(255) DEFAULT NULL COMMENT '说明',
+  `status` VARCHAR(20) DEFAULT 'active' COMMENT '状态 active/inactive',
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `idx_type` (`type`),
+  KEY `idx_status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='定价配置表';
+
+-- ============================================================
+-- 20. 系统设置表
+-- ============================================================
+CREATE TABLE IF NOT EXISTS `system_settings` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '设置ID',
+  `setting_key` VARCHAR(50) NOT NULL COMMENT '设置键',
+  `setting_value` VARCHAR(500) DEFAULT NULL COMMENT '设置值',
+  `description` VARCHAR(255) DEFAULT NULL COMMENT '说明',
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_setting_key` (`setting_key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统设置表';
+
+-- ============================================================
 -- 初始数据
 -- ============================================================
 
 -- 默认管理员账号 (密码: admin123, bcrypt加密)
 INSERT INTO `admins` (`username`, `password`, `name`, `role`) VALUES
-('admin', '$2a$10$10VpS95Q/5JgtnCqi.HpkOwAr3OwJcu1uqdfsPptc7UtNaMFnVYNy', '系统管理员', 'super_admin');
+('admin', '$2a$10$10VpS95Q/5JgtnCqi.HpkOwAr3OwJcu1uqdfsPptc7UtNaMFnVYNy', '系统管理员', 'super_admin')
+ON DUPLICATE KEY UPDATE `name` = VALUES(`name`), `role` = VALUES(`role`);
+
+-- 测试学生信息
+INSERT INTO `students` (`name`, `student_no`, `phone`, `campus`, `college`, `major`, `grade`) VALUES
+('张三', '2021001001', '13800001001', '主校区', '计算机学院', '软件工程', '2021级'),
+('李四', '2021001002', '13800001002', '主校区', '计算机学院', '计算机科学与技术', '2021级'),
+('王五', '2021002001', '13800001003', '主校区', '经济管理学院', '工商管理', '2021级'),
+('赵六', '2022001001', '13800001004', '东校区', '文学院', '汉语言文学', '2022级'),
+('钱七', '2022002001', '13800001005', '西校区', '理学院', '数学与应用数学', '2022级'),
+('孙八', '2023001001', '13800001006', '主校区', '计算机学院', '软件工程', '2023级'),
+('周九', '2023001002', '13800001007', '主校区', '计算机学院', '人工智能', '2023级'),
+('吴十', '2024001001', '13800001008', '东校区', '外国语学院', '英语', '2024级')
+ON DUPLICATE KEY UPDATE
+  `name` = VALUES(`name`),
+  `campus` = VALUES(`campus`),
+  `college` = VALUES(`college`),
+  `major` = VALUES(`major`),
+  `grade` = VALUES(`grade`),
+  `status` = 'active';
 
 -- 默认校区
 INSERT INTO `campuses` (`name`, `address`, `status`) VALUES
 ('主校区', '重庆市XX区XX路1号', 'active'),
 ('东校区', '重庆市XX区XX大道88号', 'active'),
-('西校区', '重庆市XX区XX路99号', 'active');
+('西校区', '重庆市XX区XX路99号', 'active')
+ON DUPLICATE KEY UPDATE `address` = VALUES(`address`), `status` = VALUES(`status`);
 
 -- 默认优惠券
-INSERT INTO `coupons` (`name`, `type`, `amount`, `threshold`, `scope`, `total_count`, `start_at`, `expire_at`, `status`) VALUES
-('新用户专享券', 'fixed', 5.00, 10.00, 'all', 1000, '2026-08-01 00:00:00', '2026-10-31 23:59:59', 'active'),
-('快递代取券', 'fixed', 2.00, 5.00, 'express', 500, '2026-09-01 00:00:00', '2026-09-30 23:59:59', 'active');
+INSERT INTO `coupons` (`name`, `type`, `amount`, `threshold`, `scope`, `total_count`, `start_at`, `expire_at`, `status`)
+SELECT '新用户专享券', 'fixed', 5.00, 10.00, 'all', 1000, '2026-08-01 00:00:00', '2026-10-31 23:59:59', 'active'
+WHERE NOT EXISTS (SELECT 1 FROM `coupons` WHERE `name` = '新用户专享券');
+
+INSERT INTO `coupons` (`name`, `type`, `amount`, `threshold`, `scope`, `total_count`, `start_at`, `expire_at`, `status`)
+SELECT '快递代取券', 'fixed', 2.00, 5.00, 'express', 500, '2026-09-01 00:00:00', '2026-09-30 23:59:59', 'active'
+WHERE NOT EXISTS (SELECT 1 FROM `coupons` WHERE `name` = '快递代取券');
 
 -- 默认公告
-INSERT INTO `notices` (`title`, `type`, `target`, `content`, `status`, `admin_id`) VALUES
-('欢迎使用校园跑腿', 'normal', 'all', '欢迎使用校园跑腿小程序！我们提供快递代取、食堂代购、商超代购等服务，让校园生活更便捷。', 'published', 1),
-('新用户注册送5元优惠券', 'activity', 'user', '新用户注册即可获得5元无门槛优惠券，首单立减！', 'published', 1);
+INSERT INTO `notices` (`title`, `type`, `target`, `content`, `status`, `admin_id`)
+SELECT '欢迎使用校园跑腿', 'normal', 'all', '欢迎使用校园跑腿小程序！我们提供快递代取、食堂代购、商超代购等服务，让校园生活更便捷。', 'published', 1
+WHERE NOT EXISTS (SELECT 1 FROM `notices` WHERE `title` = '欢迎使用校园跑腿');
+
+INSERT INTO `notices` (`title`, `type`, `target`, `content`, `status`, `admin_id`)
+SELECT '新用户注册送5元优惠券', 'activity', 'user', '新用户注册即可获得5元无门槛优惠券，首单立减！', 'published', 1
+WHERE NOT EXISTS (SELECT 1 FROM `notices` WHERE `title` = '新用户注册送5元优惠券');
+
+-- 默认定价配置
+INSERT INTO `pricing_configs` (`type`, `name`, `base_price`, `per_km`, `description`, `status`) VALUES
+('express', '快递代取', 2.00, 1.00, '快递代取上门服务费', 'active'),
+('canteen', '食堂代购', 3.00, 1.00, '食堂代购排队与配送', 'active'),
+('supermarket', '商超代购', 4.00, 1.50, '超市/便利店代购', 'active'),
+('errand', '代办事务', 5.00, 1.50, '打印、送文件等代办事务', 'active'),
+('other', '万能跑腿', 6.00, 2.00, '其他各类跑腿需求', 'active')
+ON DUPLICATE KEY UPDATE
+  `name` = VALUES(`name`),
+  `base_price` = VALUES(`base_price`),
+  `per_km` = VALUES(`per_km`),
+  `description` = VALUES(`description`),
+  `status` = VALUES(`status`);
+
+-- 默认系统设置
+INSERT INTO `system_settings` (`setting_key`, `setting_value`, `description`) VALUES
+('platform_name', '校园跑腿', '平台名称'),
+('service_hours', '08:00-22:00', '服务时间'),
+('min_order_amount', '2', '最低下单金额(元)'),
+('delivery_range', '3', '配送范围(公里)'),
+('auto_accept', '0', '是否自动接单 0否1是'),
+('customer_service_phone', '400-000-0000', '客服电话')
+ON DUPLICATE KEY UPDATE
+  `setting_value` = VALUES(`setting_value`),
+  `description` = VALUES(`description`);
 
 -- ============================================================
 -- 数据库初始化完成

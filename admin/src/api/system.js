@@ -16,3 +16,12 @@ export function updateSystemSettings(data) {
     data
   })
 }
+
+// 修改当前管理员密码
+export function updateAdminPassword(data) {
+  return request({
+    url: '/admin/password',
+    method: 'put',
+    data
+  })
+}

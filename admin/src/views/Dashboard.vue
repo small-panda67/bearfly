@@ -145,11 +145,11 @@ const typeMap = {
 }
 const statusMap = {
   pending: '待接单', picked: '待取货', delivering: '配送中',
-  completed: '已完成', cancelled: '已取消'
+  delivered: '待确认', completed: '已完成', cancelled: '已取消'
 }
 const statusTypeMap = {
   pending: 'warning', picked: 'primary', delivering: 'primary',
-  completed: 'success', cancelled: 'info'
+  delivered: 'warning', completed: 'success', cancelled: 'info'
 }
 
 // 订单趋势图

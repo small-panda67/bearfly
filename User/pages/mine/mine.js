@@ -10,7 +10,8 @@ Page({
       campus: '',
       balance: '0.00',
       coupons: 0,
-      loggedIn: false
+      loggedIn: false,
+      role: 'user'
     }
   },
 
@@ -22,7 +23,7 @@ Page({
     const userInfo = app.globalData.userInfo;
     if (!userInfo) {
       this.setData({
-        user: { avatar: '👤', nickname: '点击登录', verified: false, campus: '', balance: '0.00', coupons: 0, loggedIn: false }
+        user: { avatar: '👤', nickname: '点击登录', verified: false, campus: '', balance: '0.00', coupons: 0, loggedIn: false, role: 'user' }
       });
       return;
     }
@@ -31,7 +32,8 @@ Page({
       'user.avatar': userInfo.avatar || '👤',
       'user.verified': userInfo.verified || false,
       'user.campus': (userInfo.campus && userInfo.campus.name) || userInfo.campus || '',
-      'user.loggedIn': true
+      'user.loggedIn': true,
+      'user.role': app.globalData.role || userInfo.role || 'user'
     });
 
     // 拉取最新用户资料
@@ -118,6 +120,10 @@ Page({
         } catch (err) {}
       }
     });
+  },
+
+  goRiderCenter() {
+    wx.navigateTo({ url: '/pages/rider-hall/rider-hall' });
   },
 
   goHelp() {

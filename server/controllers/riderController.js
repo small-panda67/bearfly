@@ -12,9 +12,28 @@ async function writeTrack(conn, orderId, status, description, operatorType, oper
 exports.apply = async (req, res) => {
   try {
     const { name, phone, id_card, campus, student_id } = req.body;
+    if (!name || !phone) {
+      return res.status(400).json({ code: 400, message: '姓名和手机号不能为空' });
+    }
+    if (!/^1\d{10}$/.test(String(phone))) {
+      return res.status(400).json({ code: 400, message: '手机号格式不正确' });
+    }
+
+    const [riders] = await pool.query('SELECT id, status FROM riders WHERE user_id = ?', [req.user.id]);
+    if (riders[0]) {
+      return res.status(400).json({ code: 400, message: '当前账号已是跑腿员，无需重复申请' });
+    }
+    const [pendingApplications] = await pool.query(
+      'SELECT id FROM rider_applications WHERE user_id = ? AND status = "pending" LIMIT 1',
+      [req.user.id]
+    );
+    if (pendingApplications[0]) {
+      return res.status(400).json({ code: 400, message: '已有待审核申请，请勿重复提交' });
+    }
+
     const [result] = await pool.query(
       'INSERT INTO rider_applications (user_id, name, phone, id_card, campus, student_id, status, created_at) VALUES (?, ?, ?, ?, ?, ?, "pending", NOW())',
-      [req.user.id, name, phone, id_card, campus, student_id]
+      [req.user.id, String(name).trim(), String(phone).trim(), id_card || null, campus || null, student_id || null]
     );
     res.json({ code: 0, message: '申请已提交，等待审核', data: { id: result.insertId } });
   } catch (err) {
@@ -36,8 +55,11 @@ exports.getProfile = async (req, res) => {
 // 切换在线状态
 exports.toggleOnline = async (req, res) => {
   try {
-    const [riders] = await pool.query('SELECT id, is_online FROM riders WHERE user_id = ?', [req.user.id]);
+    const [riders] = await pool.query('SELECT id, is_online, status FROM riders WHERE user_id = ?', [req.user.id]);
     if (!riders[0]) return res.status(404).json({ code: 404, message: '跑腿员信息不存在' });
+    if (riders[0].status !== 'normal') {
+      return res.status(403).json({ code: 403, message: '跑腿员账号已被禁用' });
+    }
     // body 可传 is_online 0/1，否则翻转
     let next;
     if (req.body && (req.body.is_online === 0 || req.body.is_online === 1 || req.body.is_online === '0' || req.body.is_online === '1')) {
@@ -74,6 +96,14 @@ exports.grabOrder = async (req, res) => {
   const connection = await pool.getConnection();
   try {
     await connection.beginTransaction();
+    const [riders] = await connection.query(
+      'SELECT id FROM riders WHERE user_id = ? AND status = "normal" FOR UPDATE',
+      [req.user.id]
+    );
+    if (!riders[0]) {
+      await connection.rollback();
+      return res.status(403).json({ code: 403, message: '跑腿员账号不存在或已被禁用' });
+    }
     const [orders] = await connection.query('SELECT * FROM orders WHERE id = ? FOR UPDATE', [req.params.orderId]);
     if (!orders[0]) { await connection.rollback(); return res.status(404).json({ code: 404, message: '订单不存在' }); }
     if (orders[0].status !== 'pending') { await connection.rollback(); return res.status(400).json({ code: 400, message: '订单已被抢' }); }
@@ -130,36 +160,18 @@ exports.confirmDeliver = async (req, res) => {
   const connection = await pool.getConnection();
   try {
     await connection.beginTransaction();
-    // 仅允许配送中的订单确认送达；送达后仍保持 delivering，等待用户确认收货
+    // 送达后进入 delivered，用户确认收货后才完成并结算收入
     const [orders] = await connection.query('SELECT * FROM orders WHERE id = ? AND rider_id = ? AND status = "delivering" FOR UPDATE', [req.params.id, req.user.id]);
     if (!orders[0]) { await connection.rollback(); return res.status(400).json({ code: 400, message: '订单状态不正确或无权限' }); }
 
-    await connection.query('UPDATE orders SET delivered_at = NOW() WHERE id = ?', [req.params.id]);
+    await connection.query(
+      'UPDATE orders SET status = "delivered", delivered_at = NOW() WHERE id = ?',
+      [req.params.id]
+    );
     await writeTrack(connection, req.params.id, 'delivered', '已送达', 'rider', req.user.id);
 
-    // 给跑腿员钱包入账
-    const order = orders[0];
-    const amount = Number(order.amount || 0) + Number(order.tip || 0);
-    await connection.query(
-      `INSERT INTO wallets (user_id, balance, total_income, created_at) VALUES (?, ?, ?, NOW())
-       ON DUPLICATE KEY UPDATE balance = balance + VALUES(balance), total_income = total_income + VALUES(total_income), updated_at = NOW()`,
-      [req.user.id, amount, amount]
-    );
-    const [wallets] = await connection.query('SELECT balance FROM wallets WHERE user_id = ?', [req.user.id]);
-    const balanceAfter = wallets[0].balance;
-    await connection.query(
-      `INSERT INTO wallet_records (user_id, type, amount, balance_after, source, ref_id, description, created_at)
-       VALUES (?, 'income', ?, ?, 'order', ?, '订单配送收入', NOW())`,
-      [req.user.id, amount, balanceAfter, order.id]
-    );
-    // 更新跑腿员累计统计
-    await connection.query(
-      'UPDATE riders SET total_orders = total_orders + 1, total_income = total_income + ? WHERE user_id = ?',
-      [amount, req.user.id]
-    );
-
     await connection.commit();
-    res.json({ code: 0, message: '送达成功', data: { income: amount, balance: balanceAfter } });
+    res.json({ code: 0, message: '已确认送达，等待用户确认收货' });
   } catch (err) {
     await connection.rollback();
     res.status(500).json({ code: 500, message: '操作失败', error: err.message });
@@ -171,8 +183,21 @@ exports.confirmDeliver = async (req, res) => {
 // 收入统计
 exports.getIncome = async (req, res) => {
   try {
-    const [[today]] = await pool.query('SELECT COALESCE(SUM(amount), 0) as total FROM orders WHERE rider_id = ? AND status = "completed" AND DATE(created_at) = CURDATE()', [req.user.id]);
-    const [[month]] = await pool.query('SELECT COALESCE(SUM(amount), 0) as total, COUNT(*) as count FROM orders WHERE rider_id = ? AND status = "completed" AND MONTH(created_at) = MONTH(CURDATE())', [req.user.id]);
+    const [[today]] = await pool.query(
+      `SELECT COALESCE(SUM(amount + tip), 0) AS total
+       FROM orders
+       WHERE rider_id = ? AND status = "completed" AND DATE(confirmed_at) = CURDATE()`,
+      [req.user.id]
+    );
+    const [[month]] = await pool.query(
+      `SELECT COALESCE(SUM(amount + tip), 0) AS total, COUNT(*) AS count
+       FROM orders
+       WHERE rider_id = ?
+         AND status = "completed"
+         AND YEAR(confirmed_at) = YEAR(CURDATE())
+         AND MONTH(confirmed_at) = MONTH(CURDATE())`,
+      [req.user.id]
+    );
     const [wallets] = await pool.query('SELECT balance FROM wallets WHERE user_id = ?', [req.user.id]);
     res.json({ code: 0, data: { todayIncome: today.total, monthIncome: month.total, monthOrders: month.count, balance: wallets[0]?.balance || 0 } });
   } catch (err) {

@@ -9,9 +9,6 @@
         <el-table-column prop="id" label="校区ID" width="80" />
         <el-table-column prop="name" label="校区名称" width="140" />
         <el-table-column prop="address" label="地址" min-width="250" />
-        <el-table-column prop="building_count" label="宿舍楼数" width="100" align="center">
-          <template #default="{ row }">{{ row.building_count ?? '-' }}</template>
-        </el-table-column>
         <el-table-column prop="user_count" label="用户数" width="100" align="center">
           <template #default="{ row }">{{ row.user_count ?? '-' }}</template>
         </el-table-column>
@@ -60,7 +57,7 @@
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
-import { getCampusList, createCampus, updateCampus, deleteCampus } from '@/api/campus'
+import { getCampusList, createCampus, updateCampus, deleteCampus as deleteCampusApi } from '@/api/campus'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
 const loading = ref(false)
@@ -73,7 +70,7 @@ const form = reactive({ id: null, name: '', address: '', status: 'active' })
 async function loadData() {
   loading.value = true
   try {
-    const res = await getCampusList()
+    const res = await getCampusList({ keyword: keyword.value })
     if (res.code === 0) {
       tableData.value = res.data || []
     }
@@ -100,7 +97,7 @@ function deleteCampus(row) {
   ElMessageBox.confirm(`确定删除校区 ${row.name}？`, '提示', { type: 'warning' })
     .then(async () => {
       try {
-        await deleteCampus(row.id)
+        await deleteCampusApi(row.id)
         ElMessage.success('删除成功')
         loadData()
       } catch (err) {

@@ -41,7 +41,7 @@ Page({
     } catch (err) {}
   },
 
-  goWallet() { wx.showToast({ title: '钱包开发中', icon: 'none' }); },
+  goWallet() { wx.navigateTo({ url: '/pages/wallet/wallet' }); },
 
   goWithdraw() {
     const balance = this.data.rider.balance;

@@ -139,7 +139,7 @@ Page({
           wx.hideLoading();
           this.setData({ submitting: false });
           wx.showToast({ title: '下单成功', icon: 'success' });
-          setTimeout(() => wx.redirectTo({ url: '/pages/order-list/order-list' }), 1000);
+          setTimeout(() => wx.switchTab({ url: '/pages/order-list/order-list' }), 1000);
         } catch (err) {
           wx.hideLoading();
           this.setData({ submitting: false });

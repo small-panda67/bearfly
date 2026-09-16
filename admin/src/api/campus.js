@@ -1,10 +1,11 @@
 import request from '@/utils/request'
 
 // 获取校区列表
-export function getCampusList() {
+export function getCampusList(params) {
   return request({
     url: '/campus/admin',
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 

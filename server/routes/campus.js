@@ -15,7 +15,21 @@ router.get('/', authenticate, async (req, res) => {
 // 校区管理（管理员）
 router.get('/admin', adminAuth, async (req, res) => {
   try {
-    const [list] = await pool.query('SELECT * FROM campuses ORDER BY created_at DESC');
+    const params = [];
+    let whereSql = '';
+    if (req.query.keyword) {
+      whereSql = 'WHERE c.name LIKE ? OR c.address LIKE ?';
+      params.push(`%${req.query.keyword}%`, `%${req.query.keyword}%`);
+    }
+    const [list] = await pool.query(
+      `SELECT c.*,
+              (SELECT COUNT(*) FROM users u WHERE u.campus = c.name) AS user_count,
+              (SELECT COUNT(*) FROM riders r WHERE r.campus = c.name) AS rider_count
+       FROM campuses c
+       ${whereSql}
+       ORDER BY c.created_at DESC`,
+      params
+    );
     res.json({ code: 0, data: list });
   } catch (err) { res.status(500).json({ code: 500, message: '获取失败', error: err.message }); }
 });

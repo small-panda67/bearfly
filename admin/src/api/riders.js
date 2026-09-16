@@ -9,6 +9,15 @@ export function getRiderList(params) {
   })
 }
 
+// 启用/禁用跑腿员
+export function updateRiderStatus(id, status) {
+  return request({
+    url: `/admin/riders/${id}/status`,
+    method: 'put',
+    data: { status }
+  })
+}
+
 // 获取入驻申请列表
 export function getRiderApplications() {
   return request({

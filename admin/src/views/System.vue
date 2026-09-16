@@ -74,13 +74,16 @@
     <!-- 修改密码弹窗 -->
     <el-dialog v-model="pwdVisible" title="修改密码" width="400px">
       <el-form :model="pwdForm" label-width="80px">
+        <el-form-item label="原密码">
+          <el-input v-model="pwdForm.oldPassword" type="password" show-password placeholder="请输入原密码" />
+        </el-form-item>
         <el-form-item label="新密码">
           <el-input v-model="pwdForm.password" type="password" show-password placeholder="请输入新密码" />
         </el-form-item>
         <el-form-item label="确认密码">
           <el-input v-model="pwdForm.confirmPassword" type="password" show-password placeholder="请再次输入新密码" />
         </el-form-item>
-      </el-form-item>
+      </el-form>
       <template #footer>
         <el-button @click="pwdVisible = false">取消</el-button>
         <el-button type="primary" @click="savePassword">确认</el-button>
@@ -91,7 +94,7 @@
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
-import { getSystemSettings, updateSystemSettings } from '@/api/system'
+import { getSystemSettings, updateSystemSettings, updateAdminPassword } from '@/api/system'
 import { useUserStore } from '@/stores/user'
 import { ElMessage } from 'element-plus'
 
@@ -109,7 +112,7 @@ const form = reactive({
 const adminList = ref([])
 
 const pwdVisible = ref(false)
-const pwdForm = reactive({ password: '', confirmPassword: '' })
+const pwdForm = reactive({ oldPassword: '', password: '', confirmPassword: '' })
 
 async function loadSettings() {
   try {
@@ -146,12 +149,17 @@ async function saveSettings() {
 }
 
 function changePassword(row) {
+  pwdForm.oldPassword = ''
   pwdForm.password = ''
   pwdForm.confirmPassword = ''
   pwdVisible.value = true
 }
 
-function savePassword() {
+async function savePassword() {
+  if (!pwdForm.oldPassword) {
+    ElMessage.warning('请输入原密码')
+    return
+  }
   if (!pwdForm.password) {
     ElMessage.warning('请输入新密码')
     return
@@ -160,8 +168,16 @@ function savePassword() {
     ElMessage.warning('两次密码不一致')
     return
   }
-  pwdVisible.value = false
-  ElMessage.success('密码修改成功')
+  try {
+    await updateAdminPassword({
+      oldPassword: pwdForm.oldPassword,
+      newPassword: pwdForm.password
+    })
+    pwdVisible.value = false
+    ElMessage.success('密码修改成功')
+  } catch (err) {
+    // 错误已在拦截器处理
+  }
 }
 
 onMounted(() => {

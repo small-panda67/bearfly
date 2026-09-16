@@ -3,7 +3,7 @@ const app = getApp();
 
 const typeIconMap = { express: '📦', canteen: '🍜', supermarket: '🛒', errand: '📋', other: '🚀' };
 const typeNameMap = { express: '快递代取', canteen: '食堂代购', supermarket: '商超代购', errand: '代办事务', other: '万能跑腿' };
-const statusTextMap = { pending: '待接单', picked: '待取货', delivering: '配送中', completed: '已完成', cancelled: '已取消' };
+const statusTextMap = { pending: '待接单', picked: '待取货', delivering: '配送中', delivered: '待确认', completed: '已完成', cancelled: '已取消' };
 
 Page({
   data: {
@@ -47,6 +47,8 @@ Page({
     if (status === 'pending') {
       actions = [{ text: '取消订单', type: 'danger' }];
     } else if (status === 'picked' || status === 'delivering') {
+      actions = [{ text: '联系骑手', type: '' }];
+    } else if (status === 'delivered') {
       actions = [{ text: '联系骑手', type: '' }, { text: '确认收货', type: 'primary' }];
     } else if (status === 'completed') {
       actions = [{ text: '再来一单', type: '' }, { text: '评价', type: 'primary' }];
@@ -62,7 +64,7 @@ Page({
       pickup: o.pickup_address || '',
       delivery: o.delivery_address || '',
       time: o.created_at ? String(o.created_at).substring(5, 16) : '',
-      price: o.amount,
+      price: o.pay_amount || o.amount,
       riderPhone: o.rider_phone || '',
       rated: !!o.rated,
       actions
@@ -81,6 +83,8 @@ Page({
       filtered = orders.filter(o => o.status === 'pending');
     } else if (activeTab === 'delivering') {
       filtered = orders.filter(o => ['picked', 'delivering'].includes(o.status));
+    } else if (activeTab === 'delivered') {
+      filtered = orders.filter(o => o.status === 'delivered');
     } else if (activeTab === 'completed') {
       filtered = orders.filter(o => o.status === 'completed');
     }

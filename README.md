@@ -11,6 +11,7 @@ SooH/
 │   ├── app.json             # 全局配置（页面路由、tabBar、主题色）
 │   ├── app.wxss             # 全局样式（设计规范、通用组件样式）
 │   ├── project.config.json  # 微信开发者工具项目配置
+│   ├── config/              # 小程序服务端域名和 API 前缀配置
 │   └── pages/               # 15个页面（首页/登录/下单/订单/消息/个人中心/跑腿员端/移动端后台）
 │
 ├── admin/                   # Web 端管理员后台（Vue 3 + Element Plus + Vite）
@@ -50,7 +51,8 @@ SooH/
 │   └── middleware/auth.js   # JWT 认证中间件
 │
 └── database/                # 数据库脚本
-    └── init.sql             # MySQL 数据库初始化脚本（17张表 + 初始数据）
+    ├── init.sql             # MySQL 完整初始化脚本（20张表 + 初始数据）
+    └── migration_core_fixes.sql # 已有数据库升级脚本，可重复执行
 ```
 
 ## 技术栈
@@ -114,11 +116,19 @@ SELECT username, role FROM admins;
 
 初始化脚本会自动创建：
 - 数据库 `campus_errand`
-- 17 张业务表
+- 20 张业务表
 - 默认管理员账号 `admin` / `admin123`
+- 学生登录测试数据
+- 5 条默认定价配置
+- 6 项系统设置
 - 3 个示例校区
 - 2 张示例优惠券
 - 2 条示例公告
+
+已有数据库升级：
+```bash
+mysql -u root -p < D:/Desktop/SooH/database/migration_core_fixes.sql
+```
 
 ### 2. 后端服务启动
 
@@ -153,7 +163,7 @@ npm run dev
 启动后访问 `http://localhost:5173/`
 
 - Vite 开发服务器会自动将 `/api` 请求代理到 `http://localhost:3000`
-- 后端未启动时，页面会自动使用 Mock 数据展示
+- 后端未启动时会显示网络错误和空状态，不再回退到 Mock 数据
 - 默认管理员账号：`admin` / `admin123`
 
 **生产构建**：
@@ -171,9 +181,8 @@ npm run build
 5. 编译运行
 
 **小程序后端对接说明**：
-- `app.js` 中已配置 `baseUrl: 'http://localhost:3000/api'`
+- 服务端地址在 `User/config/index.js` 中配置
 - 登录页、订单列表页、个人中心页已对接真实后端 API
-- 后端不可用时自动回退到 Mock 数据
 - 微信开发者工具需在 "详情 → 本地设置" 中勾选 "不校验合法域名"
 
 ## 默认账号
@@ -236,7 +245,7 @@ pending（待接单）
 
 ## 注意事项
 
-1. **MySQL 未安装**：当前机器未安装 MySQL，需按上方指引安装后才能启动后端服务。Vue 管理后台和小程序在后端不可用时会自动使用 Mock 数据。
+1. **MySQL 环境**：需确保 MySQL 服务已启动，并与 `server/.env` 中的连接配置一致。
 2. **小程序 AppID**：`project.config.json` 中的 `appid` 为模板默认值，需替换为自己的小程序 AppID。
 3. **tabBar 图标**：`app.json` 中引用了 8 个图标文件（`images/tab-*.png`），需自行补充对应 PNG 图标，否则微信开发者工具会报图标缺失警告（不影响功能）。
 4. **微信支付/地图 SDK**：当前为 Mock，正式上线需申请微信支付商户号和腾讯地图 SDK Key。
